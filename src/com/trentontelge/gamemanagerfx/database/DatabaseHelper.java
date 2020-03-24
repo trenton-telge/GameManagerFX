@@ -1,12 +1,15 @@
 package com.trentontelge.gamemanagerfx.database;
 
+import java.io.File;
 import java.sql.*;
+
+import static com.trentontelge.gamemanagerfx.database.DatafileHelper.getFile;
 
 public class DatabaseHelper {
 
     public enum KnownTable{
         GAMES("GAMES"),
-        CIRCLES("CIRCLE"),
+        CIRCLES("CIRCLES"),
         IMAGES("IMAGES");
 
         private String sql;
@@ -36,7 +39,7 @@ public class DatabaseHelper {
         return false;
     }
 
-    protected static void cleanTable(String tableName){
+    public static void cleanTable(String tableName){
         if (tableExists(tableName)) {
             try {
                 Connection conn = createNewConnection();
@@ -64,33 +67,33 @@ public class DatabaseHelper {
                             "    RJCODE              varchar(255) default NULL,\n" +
                             "    TITLE               varchar(255) default NULL,\n" +
                             "    FOLDERPATH          varchar(255) default NULL,\n" +
-                            "    RATING              tinyint      default NULL,\n" +
-                            "    RELEASEDATE         datetime     default NULL,\n" +
-                            "    ADDEDDATE           datetime     default NULL,\n" +
+                            "    RATING              boolean      default NULL,\n" +
+                            "    RELEASEDATE         date     default NULL,\n" +
+                            "    ADDEDDATE           date     default NULL,\n" +
                             "    CIRCLEID            integer      default NULL,\n" +
                             "    CATEGORY            varchar(255) default NULL,\n" +
-                            "    TAGS                text         default NULL,\n" +
-                            "    COMMENTS            text         default NULL,\n" +
+                            "    TAGS                varchar(32000)         default NULL,\n" +
+                            "    COMMENTS            varchar(32000)         default NULL,\n" +
                             "    SIZE                integer      default NULL,\n" +
-                            "    ISRPGMAKER          tinyint not null,\n" +
+                            "    ISRPGMAKER          boolean not null,\n" +
                             "    LANGUAGE            varchar(255)\n" +
                             ")");
                     break;
                 }
                 case IMAGES: {
-                    s.execute("create table image\n" +
+                    s.execute("create table IMAGES\n" +
                             "(\n" +
                             "    ImageID      integer\n" +
                             "        primary key,\n" +
                             "    ImagePath    varchar(255),\n" +
-                            "    IsListImage  tinyint not null,\n" +
-                            "    IsCoverImage tinyint not null,\n" +
+                            "    IsListImage  boolean not null,\n" +
+                            "    IsCoverImage boolean not null,\n" +
                             "    GameID       integer not null\n" +
                             ")");
                     break;
                 }
                 case CIRCLES: {
-                    s.execute("create table circle\n" +
+                    s.execute("create table CIRCLES\n" +
                             "(\n" +
                             "    CircleID integer\n" +
                             "        primary key,\n" +
@@ -111,7 +114,34 @@ public class DatabaseHelper {
         }
     }
 
-    protected static void importTables(){
+    protected static void importTables(File sqlite){
+        //TODO copy entries from sqlite db to internal derby
+    }
 
+    protected void readDB(){
+
+    }
+    public static void writeDB(){
+        try {
+            System.out.println(getFile(KnownTable.GAMES).getPath());
+            if (getFile(KnownTable.GAMES).exists()){
+                getFile(KnownTable.GAMES).delete();
+                System.out.println("Deleted existing database backup.");
+            }
+            Connection conn = createNewConnection();
+            Statement s = conn.createStatement();
+            PreparedStatement ps = conn.prepareStatement(
+                    "CALL SYSCS_UTIL.SYSCS_EXPORT_TABLE (?,?,?,?,?,?)");
+            ps.setString(1, null);
+            ps.setString(2, "GAMES");
+            ps.setString(3, getFile(KnownTable.GAMES).toString());
+            ps.setString(4, "%");
+            ps.setString(5, null);
+            ps.setString(6, null);
+            ps.execute();
+            System.out.println("Backed up GAMES to " + getFile(KnownTable.GAMES).toString());
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }

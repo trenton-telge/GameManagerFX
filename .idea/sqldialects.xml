@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SqlResolveMappings">
+    <file url="file://$PROJECT_DIR$/src/com/trentontelge/gamemanagerfx/database/DatabaseHelper.java" scope="{&quot;node&quot;:{  &quot;@negative&quot;:&quot;1&quot;,  &quot;group&quot;:{   &quot;@kind&quot;:&quot;root&quot;,   &quot;node&quot;:{    &quot;name&quot;:{     &quot;@qname&quot;:&quot;ade026ec-5179-4845-911a-1d7409b5c8d2&quot;    },    &quot;group&quot;:{     &quot;@kind&quot;:&quot;schema&quot;,     &quot;node&quot;:{      &quot;name&quot;:{       &quot;@qname&quot;:&quot;APP&quot;      },      &quot;name&quot;:{       &quot;@qname&quot;:&quot;GM&quot;      },      &quot;name&quot;:{       &quot;@qname&quot;:&quot;SYSCS_UTIL&quot;      }     }    }   }  } }}" />
+  </component>
+</project>

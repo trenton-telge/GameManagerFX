@@ -10,6 +10,6 @@
     <orderEntry type="library" exported="" name="commons-io-2.6" level="project" />
     <orderEntry type="library" exported="" name="jsoup-1.13.1" level="project" />
     <orderEntry type="library" exported="" name="Derby" level="project" />
-    <orderEntry type="library" exported="" name="JavaFX" level="project" />
+    <orderEntry type="library" name="JavaFX 14" level="project" />
   </component>
 </module>
