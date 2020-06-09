@@ -7,9 +7,9 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" exported="" name="commons-io-2.6" level="project" />
-    <orderEntry type="library" exported="" name="jsoup-1.13.1" level="project" />
-    <orderEntry type="library" exported="" name="Derby" level="project" />
-    <orderEntry type="library" name="JavaFX 14" level="project" />
+    <orderEntry type="library" exported="" name="JavaFX 15.5" level="project" />
+    <orderEntry type="library" exported="" name="org.jsoup:jsoup:1.12.2" level="project" />
+    <orderEntry type="library" exported="" name="commons-io:commons-io:2.6" level="project" />
+    <orderEntry type="library" exported="" name="Derby 10.15.2.0" level="application" />
   </component>
 </module>

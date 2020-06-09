@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Main-Class: com.trentontelge.gamemanagerfx.Main
+Class-Path: derby.jar derby.war derbynet.jar derbyrun.jar derbytools.jar
+  derbyclient.jar derbyshared.jar derbyLocale_cs.jar derbyLocale_es.jar 
+ derbyLocale_fr.jar derbyLocale_hu.jar derbyLocale_it.jar derbyLocale_pl
+ .jar derbyLocale_ru.jar derbyLocale_de_DE.jar derbyLocale_ja_JP.jar der
+ byLocale_ko_KR.jar derbyLocale_pt_BR.jar derbyLocale_zh_CN.jar derbyLoc
+ ale_zh_TW.jar derbyoptionaltools.jar src.zip javafx-swt.jar javafx.web.
+ jar javafx.base.jar javafx.fxml.jar javafx.media.jar javafx.swing.jar j
+ avafx.controls.jar javafx.graphics.jar commons-io-2.61.jar jsoup-1.12.2
+ 1.jar
+
