@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<AnchorPane prefHeight="150.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/10.0.2-internal"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.trentontelge.gamemanagerfx.ui.ImportBarController">
+    <ProgressBar fx:id="importBar" layoutX="13.0" layoutY="56.0" prefHeight="38.0" prefWidth="475.0" progress="0.0"/>
+    <Label layoutX="162.0" layoutY="21.0" text="Importing games from SQLite DB"/>
+</AnchorPane>

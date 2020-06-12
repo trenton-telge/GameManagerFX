@@ -8,9 +8,15 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.io.File;
+import java.io.IOException;
+
 import static com.trentontelge.gamemanagerfx.database.DatabaseHelper.cleanTable;
 
 public class Main extends Application {
+
+    public static File param;
+    private static final Stage importBarStage = new Stage();
 
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -30,6 +36,17 @@ public class Main extends Application {
         DatabaseHelper.writeDB();
     }
 
+    public static void showImportBar(){
+        Parent root;
+        try {
+            root = FXMLLoader.load(Main.class.getResource("ui/importbarlayout.fxml"));
+            importBarStage.setTitle("Import DB File");
+            importBarStage.setScene(new Scene(root, 500,150));
+            importBarStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public static void main(String[] args) {
         launch(args);

@@ -2,76 +2,60 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.trentontelge.gamemanagerfx.ui.MainController">
    <top>
-      <MenuBar BorderPane.alignment="CENTER">
-        <menus>
-          <Menu mnemonicParsing="false" text="File">
-            <items>
-              <MenuItem fx:id="closeMenu" mnemonicParsing="false" text="Close" />
-                  <MenuItem fx:id="addGameMenu" mnemonicParsing="false" text="Add Game" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-              <MenuItem fx:id="importDBMenu" mnemonicParsing="false" text="Import Database" />
-                  <MenuItem fx:id="exportCSVMenu" mnemonicParsing="false" text="Export to CSV" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Edit">
-            <items>
-                  <MenuItem mnemonicParsing="false" text="Unspecified Action" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Help">
-            <items>
-              <MenuItem mnemonicParsing="false" text="About" />
-            </items>
-          </Menu>
-        </menus>
-      </MenuBar>
+       <MenuBar BorderPane.alignment="CENTER">
+           <Menu mnemonicParsing="false" text="File">
+               <MenuItem fx:id="closeMenu" mnemonicParsing="false" text="Close"/>
+               <MenuItem fx:id="addGameMenu" mnemonicParsing="false" text="Add Game"/>
+               <SeparatorMenuItem mnemonicParsing="false"/>
+               <MenuItem fx:id="importDBMenu" mnemonicParsing="false" text="Import Database"/>
+               <MenuItem fx:id="exportCSVMenu" mnemonicParsing="false" text="Export to CSV"/>
+           </Menu>
+           <Menu mnemonicParsing="false" text="Edit">
+               <MenuItem mnemonicParsing="false" text="Unspecified Action"/>
+           </Menu>
+           <Menu mnemonicParsing="false" text="Help">
+               <MenuItem mnemonicParsing="false" text="About"/>
+           </Menu>
+       </MenuBar>
    </top>
    <center>
-      <GridPane BorderPane.alignment="CENTER">
-        <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-        </columnConstraints>
-        <rowConstraints>
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        </rowConstraints>
-         <children>
-            <TableView prefHeight="200.0" prefWidth="200.0">
-              <columns>
-                <TableColumn maxWidth="25.0" minWidth="25.0" prefWidth="75.0" />
-                <TableColumn minWidth="100.0" prefWidth="300.0" text="Title" />
-                  <TableColumn minWidth="75.0" prefWidth="100.0" text="Circle" />
-                  <TableColumn minWidth="75.0" prefWidth="100.0" text="Rating" />
-                  <TableColumn minWidth="75.0" prefWidth="100.0" text="Size" />
-                  <TableColumn minWidth="125.0" prefWidth="275.0" text="Tags" />
-              </columns>
-            </TableView>
-         </children>
-      </GridPane>
+       <GridPane BorderPane.alignment="CENTER">
+           <columnConstraints>
+               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+           </columnConstraints>
+           <rowConstraints>
+               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+           </rowConstraints>
+           <TableView prefHeight="200.0" prefWidth="200.0">
+               <columns>
+                   <TableColumn maxWidth="25.0" minWidth="25.0" prefWidth="75.0"/>
+                   <TableColumn minWidth="100.0" prefWidth="300.0" text="Title"/>
+                   <TableColumn minWidth="75.0" prefWidth="100.0" text="Circle"/>
+                   <TableColumn minWidth="75.0" prefWidth="100.0" text="Rating"/>
+                   <TableColumn minWidth="75.0" prefWidth="100.0" text="Size"/>
+                   <TableColumn minWidth="125.0" prefWidth="275.0" text="Tags"/>
+               </columns>
+           </TableView>
+       </GridPane>
    </center>
    <bottom>
       <HBox prefHeight="20.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
    </bottom>
    <right>
-      <GridPane minWidth="300.0" BorderPane.alignment="CENTER">
-        <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-        </columnConstraints>
-        <rowConstraints>
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        </rowConstraints>
-         <children>
-            <VBox>
-               <children>
-                  <ScrollPane maxHeight="200.0" maxWidth="300.0" prefHeight="200.0" prefWidth="200.0">
-                    <content>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
-                    </content>
-                  </ScrollPane>
-               </children>
-            </VBox>
-         </children>
-      </GridPane>
+       <GridPane minWidth="300.0" BorderPane.alignment="CENTER">
+           <columnConstraints>
+               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+           </columnConstraints>
+           <rowConstraints>
+               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+           </rowConstraints>
+           <VBox>
+               <ScrollPane maxHeight="200.0" maxWidth="300.0" prefHeight="200.0" prefWidth="200.0">
+                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0"/>
+               </ScrollPane>
+           </VBox>
+       </GridPane>
    </right>
 </BorderPane>

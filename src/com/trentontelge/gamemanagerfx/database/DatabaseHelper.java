@@ -2,6 +2,7 @@ package com.trentontelge.gamemanagerfx.database;
 
 import java.io.File;
 import java.sql.*;
+import java.util.function.DoubleConsumer;
 
 import static com.trentontelge.gamemanagerfx.database.DatafileHelper.getFile;
 
@@ -114,8 +115,9 @@ public class DatabaseHelper {
         }
     }
 
-    protected static void importTables(File sqlite){
+    public static void importTables(File sqlite, DoubleConsumer progressUpdate){
         //TODO copy entries from sqlite db to internal derby
+
     }
 
     protected void readDB(){
