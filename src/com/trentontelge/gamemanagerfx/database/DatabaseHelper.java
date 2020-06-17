@@ -1,5 +1,7 @@
 package com.trentontelge.gamemanagerfx.database;
 
+import com.trentontelge.gamemanagerfx.prototypes.Game;
+
 import java.io.File;
 import java.sql.*;
 import java.util.function.DoubleConsumer;
@@ -123,6 +125,7 @@ public class DatabaseHelper {
     protected void readDB(){
 
     }
+
     public static void writeDB(){
         try {
             System.out.println(getFile(KnownTable.GAMES).getPath());
@@ -146,4 +149,9 @@ public class DatabaseHelper {
             e.printStackTrace();
         }
     }
+
+    public static void writeGame(Game game){
+
+    }
+
 }
