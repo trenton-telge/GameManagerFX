@@ -15,7 +15,7 @@ public class DatabaseHelper {
         CIRCLES("CIRCLES"),
         IMAGES("IMAGES");
 
-        private String sql;
+        private final String sql;
 
         KnownTable(String sql){
             this.sql = sql;
@@ -134,7 +134,6 @@ public class DatabaseHelper {
                 System.out.println("Deleted existing database backup.");
             }
             Connection conn = createNewConnection();
-            Statement s = conn.createStatement();
             PreparedStatement ps = conn.prepareStatement(
                     "CALL SYSCS_UTIL.SYSCS_EXPORT_TABLE (?,?,?,?,?,?)");
             ps.setString(1, null);
@@ -145,13 +144,34 @@ public class DatabaseHelper {
             ps.setString(6, null);
             ps.execute();
             System.out.println("Backed up GAMES to " + getFile(KnownTable.GAMES).toString());
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public static void writeGame(Game game){
-
+        try {
+            Connection conn = createNewConnection();
+            PreparedStatement ps = conn.prepareStatement("INSERT INTO GAMES(RJCODE, TITLE, FOLDERPATH, RATING, RELEASEDATE, ADDEDDATE, CIRCLEID, CATEGORY, TAGS, COMMENTS, SIZE, ISRPGMAKER, 'LANGUAGE') " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            ps.setString(1, game.getRJCode());
+            ps.setString(2, game.getTitle());
+            ps.setString(3, game.getPath());
+            ps.setBoolean(4, game.getRating());
+            ps.setDate(5, game.getReleaseDate());
+            ps.setDate(6, game.getAddedDate());
+            ps.setInt(7, game.getCircleid());
+            ps.setString(8, game.getCategory());
+            ps.setString(9, game.getTags());
+            ps.setString(10, game.getComments());
+            ps.setInt(11, game.getSize());
+            ps.setBoolean(12, game.isRPGMaker());
+            ps.setString(13, game.getLanguage());
+            ps.executeUpdate();
+            System.out.println("Added game " + game.getTitle());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

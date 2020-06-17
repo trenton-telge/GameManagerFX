@@ -11,5 +11,7 @@
     <orderEntry type="library" exported="" name="org.jsoup:jsoup:1.12.2" level="project" />
     <orderEntry type="library" exported="" name="commons-io:commons-io:2.6" level="project" />
     <orderEntry type="library" exported="" name="Derby 10.15.2.0" level="application" />
+    <orderEntry type="library" name="JavaFX 15" level="project" />
+    <orderEntry type="library" name="Derby" level="project" />
   </component>
 </module>
