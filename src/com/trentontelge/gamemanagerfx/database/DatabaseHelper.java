@@ -1,9 +1,11 @@
 package com.trentontelge.gamemanagerfx.database;
 
 import com.trentontelge.gamemanagerfx.prototypes.Game;
+import javafx.application.Platform;
 
 import java.io.File;
 import java.sql.*;
+import java.util.Vector;
 import java.util.function.DoubleConsumer;
 
 import static com.trentontelge.gamemanagerfx.database.DatafileHelper.getFile;
@@ -120,8 +122,28 @@ public class DatabaseHelper {
     public static void importTables(File sqlite, DoubleConsumer progressUpdate){
         //TODO copy entries from sqlite db to internal derby
         System.out.println("Reading from database " + sqlite.toString());
-        int max = SQLiteHelper.countGames(sqlite.toString());
+        double max = SQLiteHelper.countGames(sqlite.toString()) * 2;
         System.out.println(max + " games found in SQLite database.");
+        double current = 0;
+        Vector<Integer> ids;
+        if (max > 0){
+            ids = SQLiteHelper.getGameIDs(sqlite.toString());
+            for (int id : ids){
+                Game g = SQLiteHelper.getGameBySQLiteID(sqlite.toString(), id);
+                current++;
+                double fc1 = current;
+                Platform.runLater(() -> progressUpdate.accept((fc1 / max) * 100));
+                //TODO calculate images and circle
+
+                writeGame(g);
+                current++;
+                double fc2 = current;
+                Platform.runLater(() -> progressUpdate.accept((fc2 / max) * 100));
+                assert g != null;
+                System.out.println("Added " + g.getTitle());
+            }
+        }
+
     }
 
     protected void readDB(){

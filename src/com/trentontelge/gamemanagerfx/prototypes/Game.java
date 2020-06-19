@@ -1,5 +1,7 @@
 package com.trentontelge.gamemanagerfx.prototypes;
 
+import javafx.scene.image.Image;
+
 import java.sql.Date;
 
 public class Game {
@@ -42,6 +44,11 @@ public class Game {
         this.isRPGMaker = isRPGMaker;
         this.releaseDate = releaseDate;
         this.addedDate = addedDate;
+    }
+
+    public Image getVisibleImage() {
+        //TODO query images table by game ID and load to Image object
+        return null;
     }
 
     public int getId() {
