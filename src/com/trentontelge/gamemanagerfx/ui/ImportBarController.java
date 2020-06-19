@@ -19,6 +19,6 @@ public class ImportBarController implements Initializable {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        });
+        }).start();
     }
 }

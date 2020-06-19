@@ -119,7 +119,9 @@ public class DatabaseHelper {
 
     public static void importTables(File sqlite, DoubleConsumer progressUpdate){
         //TODO copy entries from sqlite db to internal derby
-
+        System.out.println("Reading from database " + sqlite.toString());
+        int max = SQLiteHelper.countGames(sqlite.toString());
+        System.out.println(max + " games found in SQLite database.");
     }
 
     protected void readDB(){
