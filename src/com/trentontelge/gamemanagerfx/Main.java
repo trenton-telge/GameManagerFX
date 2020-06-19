@@ -23,9 +23,10 @@ public class Main extends Application {
         cleanTable(DatabaseHelper.KnownTable.GAMES.getSql());
         cleanTable(DatabaseHelper.KnownTable.CIRCLES.getSql());
         cleanTable(DatabaseHelper.KnownTable.IMAGES.getSql());
-            DatabaseHelper.createTable(DatabaseHelper.KnownTable.GAMES);
-            DatabaseHelper.createTable(DatabaseHelper.KnownTable.CIRCLES);
-            DatabaseHelper.createTable(DatabaseHelper.KnownTable.IMAGES);
+        DatabaseHelper.createTable(DatabaseHelper.KnownTable.GAMES);
+        DatabaseHelper.createTable(DatabaseHelper.KnownTable.CIRCLES);
+        DatabaseHelper.createTable(DatabaseHelper.KnownTable.IMAGES);
+        DatabaseHelper.readDB();
         if (DatafileHelper.isFirstRun()){
             DatafileHelper.getParent().mkdirs();
         }

@@ -1,10 +1,12 @@
 package com.trentontelge.gamemanagerfx.database;
 
+import com.trentontelge.gamemanagerfx.prototypes.Circle;
 import com.trentontelge.gamemanagerfx.prototypes.Game;
 import javafx.application.Platform;
 
 import java.io.File;
 import java.sql.*;
+import java.util.Objects;
 import java.util.Vector;
 import java.util.function.DoubleConsumer;
 
@@ -65,47 +67,50 @@ public class DatabaseHelper {
             Statement s = conn.createStatement();
             switch (table) {
                 case GAMES: {
-                    s.execute("CREATE TABLE GAMES\n" +
-                            "(\n" +
-                            "    GAMEID              integer\n" +
-                            "        primary key,\n" +
-                            "    RJCODE              varchar(255) default NULL,\n" +
-                            "    TITLE               varchar(255) default NULL,\n" +
-                            "    FOLDERPATH          varchar(255) default NULL,\n" +
-                            "    RATING              boolean      default NULL,\n" +
-                            "    RELEASEDATE         date     default NULL,\n" +
-                            "    ADDEDDATE           date     default NULL,\n" +
-                            "    CIRCLEID            integer      default NULL,\n" +
-                            "    CATEGORY            varchar(255) default NULL,\n" +
-                            "    TAGS                varchar(32000)         default NULL,\n" +
-                            "    COMMENTS            varchar(32000)         default NULL,\n" +
-                            "    SIZE                integer      default NULL,\n" +
-                            "    ISRPGMAKER          boolean not null,\n" +
-                            "    LANGUAGE            varchar(255)\n" +
-                            ")");
+                    s.execute("""
+                            CREATE TABLE GAMES
+                            (
+                                GAMEID              integer
+                                    primary key,
+                                RJCODE              varchar(255) default NULL,
+                                TITLE               varchar(255) default NULL,
+                                FOLDERPATH          varchar(255) default NULL,
+                                RATING              boolean      default NULL,
+                                RELEASEDATE         date     default NULL,
+                                ADDEDDATE           date     default NULL,
+                                CIRCLEID            integer      default NULL,
+                                CATEGORY            varchar(255) default NULL,
+                                TAGS                varchar(32000)         default NULL,
+                                COMMENTS            varchar(32000)         default NULL,
+                                SIZE                integer      default NULL,
+                                ISRPGMAKER          boolean not null,
+                                LANGUAGE            varchar(255)
+                            )""");
                     break;
                 }
                 case IMAGES: {
-                    s.execute("create table IMAGES\n" +
-                            "(\n" +
-                            "    ImageID      integer\n" +
-                            "        primary key,\n" +
-                            "    ImagePath    varchar(255),\n" +
-                            "    IsListImage  boolean not null,\n" +
-                            "    IsCoverImage boolean not null,\n" +
-                            "    GameID       integer not null\n" +
-                            ")");
+                    s.execute("""
+                            create table IMAGES
+                            (
+                                IMAGEID      integer
+                                    primary key,
+                                IMAGEPATH    varchar(255),
+                                ISLISTIMAGE  boolean not null,
+                                ISCOVERIMAGE boolean not null,
+                                GAMEID       integer not null
+                            )""");
                     break;
                 }
                 case CIRCLES: {
-                    s.execute("create table CIRCLES\n" +
-                            "(\n" +
-                            "    CircleID integer\n" +
-                            "        primary key,\n" +
-                            "    RGCode   varchar(255) default NULL,\n" +
-                            "    Name     varchar(255)\n" +
-                            "        unique\n" +
-                            ")");
+                    s.execute("""
+                            create table CIRCLES
+                            (
+                                CIRCLEID integer
+                                    primary key,
+                                RGCODE   varchar(255) default NULL,
+                                NAME     varchar(255)
+                                    unique
+                            )""");
                     break;
                 }
                 default: {
@@ -120,10 +125,9 @@ public class DatabaseHelper {
     }
 
     public static void importTables(File sqlite, DoubleConsumer progressUpdate){
-        //TODO copy entries from sqlite db to internal derby
         System.out.println("Reading from database " + sqlite.toString());
         double max = SQLiteHelper.countGames(sqlite.toString()) * 2;
-        System.out.println(max + " games found in SQLite database.");
+        System.out.println((int)(max/2) + " games found in SQLite database.");
         double current = 0;
         Vector<Integer> ids;
         if (max > 0){
@@ -133,26 +137,67 @@ public class DatabaseHelper {
                 current++;
                 double fc1 = current;
                 Platform.runLater(() -> progressUpdate.accept((fc1 / max) * 100));
-                //TODO calculate images and circle
+                //TODO calculate images
+                assert g != null;
+                if (circleExists(Objects.requireNonNull(SQLiteHelper.getCircleBySQLiteID(sqlite.toString(), g.getCircleid()))) == -1) {
+                    writeCircle(Objects.requireNonNull(SQLiteHelper.getCircleBySQLiteID(sqlite.toString(), g.getCircleid())));
+                }
+                g.setCircleid(circleExists(Objects.requireNonNull(SQLiteHelper.getCircleBySQLiteID(sqlite.toString(), g.getCircleid()))));
 
                 writeGame(g);
                 current++;
                 double fc2 = current;
                 Platform.runLater(() -> progressUpdate.accept((fc2 / max) * 100));
-                assert g != null;
                 System.out.println("Added " + g.getTitle());
             }
         }
-
+        writeDB();
     }
 
-    protected void readDB(){
+    protected static int circleExists(Circle circle){
+        try {
+            Connection conn = createNewConnection();
+            PreparedStatement ps = conn.prepareStatement("SELECT CIRCLEID FROM CIRCLES WHERE 'NAME'=?");
+            ps.setString(1, circle.getName());
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()){
+                return rs.getInt(1);
+            }
+            ps = conn.prepareStatement("SELECT CIRCLEID FROM CIRCLES WHERE RGCODE=?");
+            ps.setString(1, circle.getRgCode());
+            rs = ps.executeQuery();
+            if (rs.next()){
+                return rs.getInt(1);
+            }
+            ps.close();
+            conn.close();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return -1;
+    }
 
+    public static void readDB(){
+        try {
+            Connection conn = createNewConnection();
+            PreparedStatement ps = conn.prepareStatement(
+                    "CALL SYSCS_UTIL.SYSCS_IMPORT_TABLE (?,?,?,?,?,?,?)");
+            ps.setString(1, null);
+            ps.setString(2, "GAMES");
+            ps.setString(3, getFile(KnownTable.GAMES).toString());
+            ps.setString(4, "%");
+            ps.setString(5, null);
+            ps.setString(6, null);
+            ps.setInt(7, 0);
+            ps.execute();
+            System.out.println("Read backed up copy of GAMES from " + getFile(KnownTable.GAMES).toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static void writeDB(){
         try {
-            System.out.println(getFile(KnownTable.GAMES).getPath());
             if (getFile(KnownTable.GAMES).exists()){
                 getFile(KnownTable.GAMES).delete();
                 System.out.println("Deleted existing database backup.");
@@ -192,8 +237,25 @@ public class DatabaseHelper {
             ps.setBoolean(12, game.isRPGMaker());
             ps.setString(13, game.getLanguage());
             ps.executeUpdate();
+            ps.close();
+            conn.close();
             System.out.println("Added game " + game.getTitle());
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void writeCircle(Circle circle){
+        try {
+            Connection conn = createNewConnection();
+            PreparedStatement ps = conn.prepareStatement("INSERT INTO CIRCLES(RGCODE, 'NAME') VALUES (?, ?)");
+            ps.setString(1, circle.getRgCode());
+            ps.setString(2, circle.getName());
+            ps.executeUpdate();
+            ps.close();
+            conn.close();
+            System.out.println("Added circle " + circle.getName());
+        } catch (Exception e){
             e.printStackTrace();
         }
     }
