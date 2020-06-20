@@ -24,13 +24,13 @@ public class Main extends Application {
         cleanTable(DatabaseHelper.KnownTable.GAMES.getSql());
         cleanTable(DatabaseHelper.KnownTable.CIRCLES.getSql());
         cleanTable(DatabaseHelper.KnownTable.IMAGES.getSql());
+        if (DatafileHelper.isFirstRun()){
+            DatafileHelper.getParent().mkdirs();
+        }
         DatabaseHelper.createTable(DatabaseHelper.KnownTable.GAMES);
         DatabaseHelper.createTable(DatabaseHelper.KnownTable.CIRCLES);
         DatabaseHelper.createTable(DatabaseHelper.KnownTable.IMAGES);
         DatabaseHelper.readDBFromFile();
-        if (DatafileHelper.isFirstRun()){
-            DatafileHelper.getParent().mkdirs();
-        }
         Parent root = FXMLLoader.load(getClass().getResource("ui/mainlayout.fxml"));
         primaryStage.setTitle("GameManagerFX");
         primaryStage.setScene(new Scene(root, 1200, 700));

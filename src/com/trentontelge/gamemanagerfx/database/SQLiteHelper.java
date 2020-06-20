@@ -51,8 +51,10 @@ public class SQLiteHelper {
                 String title = rs.getString(2);
                 String folderPath = rs.getString(3);
                 boolean rating = rs.getBoolean(4);
-                Date releaseDate = java.sql.Date.valueOf(rs.getString(5) == null?null:rs.getString(5).substring(0, 9));
-                Date addedDate = java.sql.Date.valueOf(rs.getString(6) == null?null:rs.getString(6).substring(0, 9));
+                String workingDate = rs.getString(5) == null?"2000-01-01":rs.getString(5).substring(0, 10);
+                Date releaseDate = java.sql.Date.valueOf(workingDate);
+                workingDate = rs.getString(6) == null?"2000-01-01":rs.getString(6).substring(0, 10);
+                Date addedDate = java.sql.Date.valueOf(workingDate);
                 int circleID = rs.getInt(7);
                 String category = rs.getString(8);
                 String tags = rs.getString(9);
@@ -71,7 +73,7 @@ public class SQLiteHelper {
     protected static Circle getCircleBySQLiteID(String path, int id) {
         try {
             Connection conn = createNewConnection(path);
-            PreparedStatement ps = conn.prepareStatement("SELECT RGCode, 'Name' FROM circle WHERE CircleID=?");
+            PreparedStatement ps = conn.prepareStatement("SELECT RGCode, \"Name\" FROM circle WHERE CircleID=?");
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             if (rs.next()){

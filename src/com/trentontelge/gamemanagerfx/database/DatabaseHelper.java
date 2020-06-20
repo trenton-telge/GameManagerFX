@@ -71,8 +71,7 @@ public class DatabaseHelper {
                     s.execute("""
                             CREATE TABLE GAMES
                             (
-                                GAMEID              integer
-                                    primary key,
+                                GAMEID              integer PRIMARY KEY NOT NULL,
                                 RJCODE              varchar(255) default NULL,
                                 TITLE               varchar(255) default NULL,
                                 FOLDERPATH          varchar(255) default NULL,
@@ -85,7 +84,7 @@ public class DatabaseHelper {
                                 COMMENTS            varchar(32000)         default NULL,
                                 SIZE                integer      default NULL,
                                 ISRPGMAKER          boolean not null,
-                                LANGUAGE            varchar(255)
+                                LANG            varchar(255)
                             )""");
                     break;
                 }
@@ -93,8 +92,7 @@ public class DatabaseHelper {
                     s.execute("""
                             create table IMAGES
                             (
-                                IMAGEID      integer
-                                    primary key,
+                                IMAGEID      integer PRIMARY KEY NOT NULL,
                                 IMAGEPATH    varchar(255),
                                 ISLISTIMAGE  boolean not null,
                                 ISCOVERIMAGE boolean not null,
@@ -106,10 +104,9 @@ public class DatabaseHelper {
                     s.execute("""
                             create table CIRCLES
                             (
-                                CIRCLEID integer
-                                    primary key,
+                                CIRCLEID integer PRIMARY KEY NOT NULL,
                                 RGCODE   varchar(255) default NULL,
-                                NAME     varchar(255)
+                                TITLE     varchar(255)
                                     unique
                             )""");
                     break;
@@ -134,22 +131,24 @@ public class DatabaseHelper {
         if (max > 0){
             ids = SQLiteHelper.getGameIDs(sqlite.toString());
             for (int id : ids){
+                System.out.print("[" + ((int)(current/2)) + "/" + ((int)(max/2)) + "]");
                 Game g = SQLiteHelper.getGameBySQLiteID(sqlite.toString(), id);
                 current++;
                 double fc1 = current;
-                Platform.runLater(() -> progressUpdate.accept((fc1 / max) * 100));
+                Platform.runLater(() -> progressUpdate.accept((fc1 / max)));
                 //TODO calculate images
                 assert g != null;
-                if (circleExists(Objects.requireNonNull(SQLiteHelper.getCircleBySQLiteID(sqlite.toString(), g.getCircleid()))) == -1) {
-                    writeCircle(Objects.requireNonNull(SQLiteHelper.getCircleBySQLiteID(sqlite.toString(), g.getCircleid())));
-                }
-                g.setCircleid(circleExists(Objects.requireNonNull(SQLiteHelper.getCircleBySQLiteID(sqlite.toString(), g.getCircleid()))));
+                if (g.getCircleid() != 0) {
+                    if (circleExists(Objects.requireNonNull(SQLiteHelper.getCircleBySQLiteID(sqlite.toString(), g.getCircleid()))) == -1) {
+                        writeCircle(Objects.requireNonNull(SQLiteHelper.getCircleBySQLiteID(sqlite.toString(), g.getCircleid())));
+                    }
+                    g.setCircleid(circleExists(Objects.requireNonNull(SQLiteHelper.getCircleBySQLiteID(sqlite.toString(), g.getCircleid()))));
 
+                }
                 writeGame(g);
                 current++;
                 double fc2 = current;
-                Platform.runLater(() -> progressUpdate.accept((fc2 / max) * 100));
-                System.out.println("Added " + g.getTitle());
+                Platform.runLater(() -> progressUpdate.accept((fc2 / max)));
             }
         }
         writeDBToFile();
@@ -157,21 +156,25 @@ public class DatabaseHelper {
     }
 
     public static void readDBFromFile(){
-        try {
-            Connection conn = createNewConnection();
-            PreparedStatement ps = conn.prepareStatement(
-                    "CALL SYSCS_UTIL.SYSCS_IMPORT_TABLE (?,?,?,?,?,?,?)");
-            ps.setString(1, null);
-            ps.setString(2, "GAMES");
-            ps.setString(3, getFile(KnownTable.GAMES).toString());
-            ps.setString(4, "%");
-            ps.setString(5, null);
-            ps.setString(6, null);
-            ps.setInt(7, 0);
-            ps.execute();
-            System.out.println("Read backed up copy of GAMES from " + getFile(KnownTable.GAMES).toString());
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (getFile(KnownTable.GAMES).exists()) {
+            try {
+                Connection conn = createNewConnection();
+                PreparedStatement ps = conn.prepareStatement(
+                        "CALL SYSCS_UTIL.SYSCS_IMPORT_TABLE (?,?,?,?,?,?,?)");
+                ps.setString(1, null);
+                ps.setString(2, "GAMES");
+                ps.setString(3, getFile(KnownTable.GAMES).toString());
+                ps.setString(4, "%");
+                ps.setString(5, null);
+                ps.setString(6, null);
+                ps.setInt(7, 0);
+                ps.execute();
+                System.out.println("Read backed up copy of GAMES from " + getFile(KnownTable.GAMES).toString());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("No database backup found.");
         }
     }
 
@@ -198,23 +201,28 @@ public class DatabaseHelper {
     }
 
     public static void writeGame(Game game){
+        int id = countOfGames();
+        while (gameIDExists(id)){
+            id++;
+        }
         try {
             Connection conn = createNewConnection();
-            PreparedStatement ps = conn.prepareStatement("INSERT INTO GAMES(RJCODE, TITLE, FOLDERPATH, RATING, RELEASEDATE, ADDEDDATE, CIRCLEID, CATEGORY, TAGS, COMMENTS, SIZE, ISRPGMAKER, 'LANGUAGE') " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-            ps.setString(1, game.getRJCode());
-            ps.setString(2, game.getTitle());
-            ps.setString(3, game.getPath());
-            ps.setBoolean(4, game.getRating());
-            ps.setDate(5, game.getReleaseDate());
-            ps.setDate(6, game.getAddedDate());
-            ps.setInt(7, game.getCircleid());
-            ps.setString(8, game.getCategory());
-            ps.setString(9, game.getTags());
-            ps.setString(10, game.getComments());
-            ps.setInt(11, game.getSize());
-            ps.setBoolean(12, game.isRPGMaker());
-            ps.setString(13, game.getLanguage());
+            PreparedStatement ps = conn.prepareStatement("INSERT INTO GAMES(GAMEID, RJCODE, TITLE, FOLDERPATH, RATING, RELEASEDATE, ADDEDDATE, CIRCLEID, CATEGORY, TAGS, COMMENTS, SIZE, ISRPGMAKER, LANG) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            ps.setInt(1, id);
+            ps.setString(2, game.getRJCode());
+            ps.setString(3, game.getTitle());
+            ps.setString(4, game.getPath());
+            ps.setBoolean(5, game.getRating());
+            ps.setDate(6, game.getReleaseDate());
+            ps.setDate(7, game.getAddedDate());
+            ps.setInt(8, game.getCircleid());
+            ps.setString(9, game.getCategory());
+            ps.setString(10, game.getTags());
+            ps.setString(11, game.getComments());
+            ps.setInt(12, game.getSize());
+            ps.setBoolean(13, game.isRPGMaker());
+            ps.setString(14, game.getLanguage());
             ps.executeUpdate();
             ps.close();
             conn.close();
@@ -225,11 +233,16 @@ public class DatabaseHelper {
     }
 
     public static void writeCircle(Circle circle){
+        int id = countOfCircles();
+        while (circleIDExists(id)){
+            id++;
+        }
         try {
             Connection conn = createNewConnection();
-            PreparedStatement ps = conn.prepareStatement("INSERT INTO CIRCLES(RGCODE, 'NAME') VALUES (?, ?)");
-            ps.setString(1, circle.getRgCode());
-            ps.setString(2, circle.getName());
+            PreparedStatement ps = conn.prepareStatement("INSERT INTO CIRCLES(CIRCLEID, RGCODE, TITLE) VALUES (?, ?, ?)");
+            ps.setInt(1, id);
+            ps.setString(2, circle.getRgCode());
+            ps.setString(3, circle.getName());
             ps.executeUpdate();
             ps.close();
             conn.close();
@@ -242,7 +255,7 @@ public class DatabaseHelper {
     protected static int circleExists(Circle circle){
         try {
             Connection conn = createNewConnection();
-            PreparedStatement ps = conn.prepareStatement("SELECT CIRCLEID FROM CIRCLES WHERE 'NAME'=?");
+            PreparedStatement ps = conn.prepareStatement("SELECT CIRCLEID FROM CIRCLES WHERE TITLE=?");
             ps.setString(1, circle.getName());
             ResultSet rs = ps.executeQuery();
             if (rs.next()){
@@ -262,6 +275,70 @@ public class DatabaseHelper {
         return -1;
     }
 
+    protected static int countOfCircles() {
+        int n = 0;
+        try {
+            Connection conn = createNewConnection();
+            PreparedStatement ps = conn.prepareStatement("SELECT COUNT(*) FROM CIRCLES");
+            ResultSet rs = ps.executeQuery();
+            rs.next();
+            n = rs.getInt(1);
+            ps.close();
+            conn.close();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return n;
+    }
+
+    protected static boolean circleIDExists(int id){
+        boolean e = false;
+        try {
+            Connection conn = createNewConnection();
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM CIRCLES WHERE CIRCLEID=?");
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            e = rs.next();
+            ps.close();
+            conn.close();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return e;
+    }
+
+    protected static int countOfGames(){
+        int n = 0;
+        try {
+            Connection conn = createNewConnection();
+            PreparedStatement ps = conn.prepareStatement("SELECT COUNT(*) FROM GAMES");
+            ResultSet rs = ps.executeQuery();
+            rs.next();
+            n = rs.getInt(1);
+            ps.close();
+            conn.close();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return n;
+    }
+
+    protected  static  boolean gameIDExists(int id){
+        boolean e = false;
+        try {
+            Connection conn = createNewConnection();
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM GAMES WHERE GAMEID=?");
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            e = rs.next();
+            ps.close();
+            conn.close();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return e;
+    }
+
     public static Vector<Game> getAllGames(){
         Vector<Game> v = new Vector<>();
         try {
@@ -278,7 +355,7 @@ public class DatabaseHelper {
                         rs.getString("CATEGORY"),
                         rs.getString("TAGS"),
                         rs.getString("COMMENTS"),
-                        rs.getString("LANGUAGE"),
+                        rs.getString("LANG"),
                         rs.getBoolean("RATING"),
                         rs.getBoolean("ISRPGMAKER"),
                         rs.getDate("RELEASEDATE"),
