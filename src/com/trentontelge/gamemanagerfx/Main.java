@@ -17,6 +17,7 @@ public class Main extends Application {
 
     public static File param;
     private static final Stage importBarStage = new Stage();
+    public static Runnable callback = () -> {};
 
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -26,7 +27,7 @@ public class Main extends Application {
         DatabaseHelper.createTable(DatabaseHelper.KnownTable.GAMES);
         DatabaseHelper.createTable(DatabaseHelper.KnownTable.CIRCLES);
         DatabaseHelper.createTable(DatabaseHelper.KnownTable.IMAGES);
-        DatabaseHelper.readDB();
+        DatabaseHelper.readDBFromFile();
         if (DatafileHelper.isFirstRun()){
             DatafileHelper.getParent().mkdirs();
         }
@@ -34,12 +35,13 @@ public class Main extends Application {
         primaryStage.setTitle("GameManagerFX");
         primaryStage.setScene(new Scene(root, 1200, 700));
         primaryStage.show();
-        DatabaseHelper.writeDB();
+        DatabaseHelper.writeDBToFile();
     }
 
-    public static void showImportBar(){
+    public static void showImportBar(Runnable updater){
         Parent root;
         try {
+            callback = updater;
             root = FXMLLoader.load(Main.class.getResource("ui/importbarlayout.fxml"));
             importBarStage.setTitle("Import DB File");
             importBarStage.setScene(new Scene(root, 500,150));

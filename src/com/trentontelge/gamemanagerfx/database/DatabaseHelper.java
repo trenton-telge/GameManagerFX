@@ -1,5 +1,6 @@
 package com.trentontelge.gamemanagerfx.database;
 
+import com.trentontelge.gamemanagerfx.Main;
 import com.trentontelge.gamemanagerfx.prototypes.Circle;
 import com.trentontelge.gamemanagerfx.prototypes.Game;
 import javafx.application.Platform;
@@ -151,33 +152,11 @@ public class DatabaseHelper {
                 System.out.println("Added " + g.getTitle());
             }
         }
-        writeDB();
+        writeDBToFile();
+        Platform.runLater(Main.callback);
     }
 
-    protected static int circleExists(Circle circle){
-        try {
-            Connection conn = createNewConnection();
-            PreparedStatement ps = conn.prepareStatement("SELECT CIRCLEID FROM CIRCLES WHERE 'NAME'=?");
-            ps.setString(1, circle.getName());
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()){
-                return rs.getInt(1);
-            }
-            ps = conn.prepareStatement("SELECT CIRCLEID FROM CIRCLES WHERE RGCODE=?");
-            ps.setString(1, circle.getRgCode());
-            rs = ps.executeQuery();
-            if (rs.next()){
-                return rs.getInt(1);
-            }
-            ps.close();
-            conn.close();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        return -1;
-    }
-
-    public static void readDB(){
+    public static void readDBFromFile(){
         try {
             Connection conn = createNewConnection();
             PreparedStatement ps = conn.prepareStatement(
@@ -196,7 +175,7 @@ public class DatabaseHelper {
         }
     }
 
-    public static void writeDB(){
+    public static void writeDBToFile(){
         try {
             if (getFile(KnownTable.GAMES).exists()){
                 getFile(KnownTable.GAMES).delete();
@@ -260,4 +239,55 @@ public class DatabaseHelper {
         }
     }
 
+    protected static int circleExists(Circle circle){
+        try {
+            Connection conn = createNewConnection();
+            PreparedStatement ps = conn.prepareStatement("SELECT CIRCLEID FROM CIRCLES WHERE 'NAME'=?");
+            ps.setString(1, circle.getName());
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()){
+                return rs.getInt(1);
+            }
+            ps = conn.prepareStatement("SELECT CIRCLEID FROM CIRCLES WHERE RGCODE=?");
+            ps.setString(1, circle.getRgCode());
+            rs = ps.executeQuery();
+            if (rs.next()){
+                return rs.getInt(1);
+            }
+            ps.close();
+            conn.close();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return -1;
+    }
+
+    public static Vector<Game> getAllGames(){
+        Vector<Game> v = new Vector<>();
+        try {
+            Connection conn = createNewConnection();
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM GAMES");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()){
+                Game g = new Game(rs.getInt("GAMEID"),
+                        rs.getInt("CIRCLEID"),
+                        rs.getInt("SIZE"),
+                        rs.getString("RJCODE"),
+                        rs.getString("TITLE"),
+                        rs.getString("FOLDERPATH"),
+                        rs.getString("CATEGORY"),
+                        rs.getString("TAGS"),
+                        rs.getString("COMMENTS"),
+                        rs.getString("LANGUAGE"),
+                        rs.getBoolean("RATING"),
+                        rs.getBoolean("ISRPGMAKER"),
+                        rs.getDate("RELEASEDATE"),
+                        rs.getDate("ADDEDDATE"));
+                v.add(g);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return v;
+    }
 }

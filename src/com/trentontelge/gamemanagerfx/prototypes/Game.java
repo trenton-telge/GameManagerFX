@@ -1,6 +1,6 @@
 package com.trentontelge.gamemanagerfx.prototypes;
 
-import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 import java.sql.Date;
 
@@ -46,7 +46,7 @@ public class Game {
         this.addedDate = addedDate;
     }
 
-    public Image getVisibleImage() {
+    public ImageView getVisibleImage() {
         //TODO query images table by game ID and load to Image object
         return null;
     }

@@ -1,14 +1,18 @@
 package com.trentontelge.gamemanagerfx.ui;
 
 import com.trentontelge.gamemanagerfx.Main;
+import com.trentontelge.gamemanagerfx.database.DatabaseHelper;
 import com.trentontelge.gamemanagerfx.prototypes.Game;
 import com.trentontelge.gamemanagerfx.util.DBFileFilter;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.Initializable;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 import javax.swing.*;
 import java.net.URL;
@@ -20,7 +24,7 @@ public class MainController implements Initializable {
     public MenuItem importDBMenu;
     public MenuItem exportCSVMenu;
     public TableView<Game> gameTable;
-    public TableColumn<Game, Image> iconCol;
+    public TableColumn<Game, ImageView> iconCol;
     public TableColumn<Game, String> titleCol;
     public TableColumn<Game, String> circleCol;
     public TableColumn<Game, Image> ratingCol;
@@ -30,7 +34,7 @@ public class MainController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        
+        iconCol.setCellValueFactory(new PropertyValueFactory<>("visibleimage"));
 
         importDBMenu.setOnAction(e -> {
             JFileChooser dbChooser = new JFileChooser();
@@ -39,7 +43,8 @@ public class MainController implements Initializable {
             int returnval = dbChooser.showDialog(new JFrame("Import DB File"), "Import DB File");
             if (returnval == JFileChooser.APPROVE_OPTION) {
                 Main.param = dbChooser.getSelectedFile();
-                Main.showImportBar();
+                Runnable updater = this::refreshData;
+                Main.showImportBar(updater);
             }
         });
         addGameMenu.setOnAction(e -> {
@@ -48,5 +53,11 @@ public class MainController implements Initializable {
         exportCSVMenu.setOnAction( e -> {
             //TODO export games table to csv
         });
+        refreshData();
+    }
+
+    protected void refreshData(){
+        data = FXCollections.observableList(DatabaseHelper.getAllGames());
+        gameTable.setItems(data);
     }
 }
