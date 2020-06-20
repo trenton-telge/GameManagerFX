@@ -35,6 +35,11 @@ public class MainController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         iconCol.setCellValueFactory(new PropertyValueFactory<>("visibleimage"));
+        titleCol.setCellValueFactory(new PropertyValueFactory<>("title"));
+        circleCol.setCellValueFactory(new PropertyValueFactory<>("circlename"));
+        ratingCol.setCellValueFactory(new PropertyValueFactory<>("rating"));
+        sizeCol.setCellValueFactory(new PropertyValueFactory<>("rating"));
+        tagsCol.setCellValueFactory(new PropertyValueFactory<>("tags"));
 
         importDBMenu.setOnAction(e -> {
             JFileChooser dbChooser = new JFileChooser();
@@ -57,7 +62,9 @@ public class MainController implements Initializable {
     }
 
     protected void refreshData(){
+        System.out.println("Refreshing data...");
         data = FXCollections.observableList(DatabaseHelper.getAllGames());
         gameTable.setItems(data);
+        System.out.println("Data refreshed.");
     }
 }

@@ -288,6 +288,7 @@ public class DatabaseHelper {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+        System.out.println("Read "+ v.size() +" games to array.");
         return v;
     }
 }

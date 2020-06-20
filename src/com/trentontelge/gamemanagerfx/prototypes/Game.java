@@ -51,6 +51,11 @@ public class Game {
         return null;
     }
 
+    public String getCircleName(){
+        //TODO return circle name queried form db
+        return "";
+    }
+
     public int getId() {
         return id;
     }
