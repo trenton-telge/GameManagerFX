@@ -16,7 +16,7 @@ import static com.trentontelge.gamemanagerfx.database.DatabaseHelper.cleanTable;
 public class Main extends Application {
 
     public static File param;
-    private static final Stage importBarStage = new Stage();
+    public static final Stage importBarStage = new Stage();
     public static Runnable callback = () -> {};
 
     @Override

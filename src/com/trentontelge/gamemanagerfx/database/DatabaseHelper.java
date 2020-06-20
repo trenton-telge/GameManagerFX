@@ -153,6 +153,7 @@ public class DatabaseHelper {
         }
         writeDBToFile();
         Platform.runLater(Main.callback);
+        Platform.runLater(Main.importBarStage::close);
     }
 
     public static void readDBFromFile(){
