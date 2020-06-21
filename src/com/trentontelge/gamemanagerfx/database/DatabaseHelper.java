@@ -3,6 +3,7 @@ package com.trentontelge.gamemanagerfx.database;
 import com.trentontelge.gamemanagerfx.Main;
 import com.trentontelge.gamemanagerfx.prototypes.Circle;
 import com.trentontelge.gamemanagerfx.prototypes.Game;
+import com.trentontelge.gamemanagerfx.prototypes.Image;
 import javafx.application.Platform;
 
 import java.io.File;
@@ -136,7 +137,6 @@ public class DatabaseHelper {
                 current++;
                 double fc1 = current;
                 Platform.runLater(() -> progressUpdate.accept((fc1 / max)));
-                //TODO calculate images
                 assert g != null;
                 if (g.getCircleid() != 0) {
                     if (circleExists(Objects.requireNonNull(SQLiteHelper.getCircleBySQLiteID(sqlite.toString(), g.getCircleid()))) == -1) {
@@ -146,6 +146,15 @@ public class DatabaseHelper {
 
                 }
                 writeGame(g);
+                Vector<Image> v = SQLiteHelper.getImagesBySQLiteGameID(sqlite.toString(), id);
+                int newID = getGame(g.getTitle()).getId();
+                if (v != null){
+                    System.out.println("Found " + v.size() + " images.");
+                    for (Image i : v){
+                        i.setGameid(newID);
+                        writeImage(i);
+                    }
+                }
                 current++;
                 double fc2 = current;
                 Platform.runLater(() -> progressUpdate.accept((fc2 / max)));
@@ -307,6 +316,35 @@ public class DatabaseHelper {
         }
     }
 
+    public static Game getGame(String title){
+        Game g = new Game();
+        try {
+            Connection conn = createNewConnection();
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM GAMES WHERE TITLE=?");
+            ps.setString(1, title);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()){
+                g = new Game(rs.getInt("GAMEID"),
+                        rs.getInt("CIRCLEID"),
+                        rs.getInt("SIZE"),
+                        rs.getString("RJCODE"),
+                        rs.getString("TITLE"),
+                        rs.getString("FOLDERPATH"),
+                        rs.getString("CATEGORY"),
+                        rs.getString("TAGS"),
+                        rs.getString("COMMENTS"),
+                        rs.getString("LANG"),
+                        rs.getBoolean("RATING"),
+                        rs.getBoolean("ISRPGMAKER"),
+                        rs.getDate("RELEASEDATE"),
+                        rs.getDate("ADDEDDATE"));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return g;
+    }
+
     public static void writeCircle(Circle circle){
         int id = countOfCircles() + 1;
         while (circleIDExists(id)){
@@ -460,5 +498,59 @@ public class DatabaseHelper {
         }
         System.out.println("Read "+ v.size() +" games to array.");
         return v;
+    }
+
+    protected static int countOfImages(){
+        int n = 0;
+        try {
+            Connection conn = createNewConnection();
+            PreparedStatement ps = conn.prepareStatement("SELECT COUNT(*) FROM IMAGES");
+            ResultSet rs = ps.executeQuery();
+            rs.next();
+            n = rs.getInt(1);
+            ps.close();
+            conn.close();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return n;
+    }
+
+    protected  static  boolean imageIDExists(int id){
+        boolean e = false;
+        try {
+            Connection conn = createNewConnection();
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM IMAGES WHERE IMAGEID=?");
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            e = rs.next();
+            ps.close();
+            conn.close();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return e;
+    }
+
+    public static void writeImage(Image image){
+        int id = countOfImages() + 1;
+        while (imageIDExists(id)){
+            id++;
+        }
+        try {
+            Connection conn = createNewConnection();
+            PreparedStatement ps = conn.prepareStatement("INSERT INTO IMAGES(IMAGEID, IMAGEPATH, ISLISTIMAGE, ISCOVERIMAGE, GAMEID) VALUES(?, ?, ?, ?, ?)");
+            ps.setInt(1, id);
+            ps.setString(2, image.getImagepath());
+            ps.setBoolean(3, image.isIslistimage());
+            ps.setBoolean(4, image.isIscoverimage());
+            ps.setInt(5, image.getGameid());
+            ps.executeUpdate();
+            ps.close();
+            conn.close();
+            System.out.println("Added image " + image.getImagepath());
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 }

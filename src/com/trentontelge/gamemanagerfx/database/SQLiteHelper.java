@@ -2,6 +2,7 @@ package com.trentontelge.gamemanagerfx.database;
 
 import com.trentontelge.gamemanagerfx.prototypes.Circle;
 import com.trentontelge.gamemanagerfx.prototypes.Game;
+import com.trentontelge.gamemanagerfx.prototypes.Image;
 
 import java.sql.*;
 import java.util.Vector;
@@ -85,5 +86,21 @@ public class SQLiteHelper {
             e.printStackTrace();
         }
         return null;
+    }
+
+    protected static Vector<Image> getImagesBySQLiteGameID(String path, int id){
+        Vector<Image> v = new Vector<>();
+        try {
+            Connection conn = createNewConnection(path);
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM image WHERE GameID=?");
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()){
+                v.add(new Image(rs.getInt("ImageID"), rs.getInt("GameID"), rs.getBoolean("IsListImage"), rs.getBoolean("IsCoverImage"), rs.getString("ImagePath")));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return v;
     }
 }
