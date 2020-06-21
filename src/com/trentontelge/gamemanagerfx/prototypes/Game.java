@@ -1,11 +1,12 @@
 package com.trentontelge.gamemanagerfx.prototypes;
 
+import com.trentontelge.gamemanagerfx.database.DatabaseHelper;
 import javafx.scene.image.ImageView;
 
 import java.sql.Date;
 
 public class Game {
-    private int id, circleid, size;
+    private int id = 0, circleid = 0, size = 0;
     private String RJCode, title, path, category, tags, comments, language;
     private boolean rating, isRPGMaker;
     private java.sql.Date releaseDate, addedDate;
@@ -49,11 +50,6 @@ public class Game {
     public ImageView getVisibleImage() {
         //TODO query images table by game ID and load to Image object
         return null;
-    }
-
-    public String getCircleName(){
-        //TODO return circle name queried form db
-        return "";
     }
 
     public int getId() {
@@ -166,5 +162,9 @@ public class Game {
 
     public void setAddedDate(Date addedDate) {
         this.addedDate = addedDate;
+    }
+
+    public String getCircleName() {
+        return DatabaseHelper.getCircle(circleid).getName();
     }
 }

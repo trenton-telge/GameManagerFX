@@ -202,7 +202,7 @@ public class DatabaseHelper {
     }
 
     public static void writeGame(Game game){
-        int id = countOfGames();
+        int id = countOfGames() + 1;
         while (gameIDExists(id)){
             id++;
         }
@@ -234,7 +234,7 @@ public class DatabaseHelper {
     }
 
     public static void writeCircle(Circle circle){
-        int id = countOfCircles();
+        int id = countOfCircles() + 1;
         while (circleIDExists(id)){
             id++;
         }
@@ -306,6 +306,24 @@ public class DatabaseHelper {
             throwables.printStackTrace();
         }
         return e;
+    }
+
+    public static Circle getCircle(int id){
+        Circle c = new Circle();
+        try {
+            Connection conn = createNewConnection();
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM CIRCLES WHERE CIRCLEID=?");
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                c = new Circle(rs.getInt("CIRCLEID"), rs.getString("RGCODE"), rs.getString("TITLE"));
+            }
+            ps.close();
+            conn.close();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return c;
     }
 
     protected static int countOfGames(){

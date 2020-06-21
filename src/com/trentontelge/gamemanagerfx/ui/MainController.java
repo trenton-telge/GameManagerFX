@@ -34,9 +34,9 @@ public class MainController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        iconCol.setCellValueFactory(new PropertyValueFactory<>("visibleimage"));
+        iconCol.setCellValueFactory(new PropertyValueFactory<>("visibleImage"));
         titleCol.setCellValueFactory(new PropertyValueFactory<>("title"));
-        circleCol.setCellValueFactory(new PropertyValueFactory<>("circlename"));
+        circleCol.setCellValueFactory(new PropertyValueFactory<>("circleName"));
         ratingCol.setCellValueFactory(new PropertyValueFactory<>("rating"));
         sizeCol.setCellValueFactory(new PropertyValueFactory<>("rating"));
         tagsCol.setCellValueFactory(new PropertyValueFactory<>("tags"));

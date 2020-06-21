@@ -4,7 +4,7 @@ public class Circle {
     int circleID;
     String rgCode, name;
 
-    Circle() {
+    public Circle() {
 
     }
 
