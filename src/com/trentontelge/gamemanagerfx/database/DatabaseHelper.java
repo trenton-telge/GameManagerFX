@@ -170,12 +170,58 @@ public class DatabaseHelper {
                 ps.setString(6, null);
                 ps.setInt(7, 0);
                 ps.execute();
+                ps.close();
+                conn.close();
                 System.out.println("Read backed up copy of GAMES from " + getFile(KnownTable.GAMES).toString());
             } catch (Exception e) {
                 e.printStackTrace();
             }
         } else {
-            System.out.println("No database backup found.");
+            System.out.println("No GAMES database backup found.");
+        }
+        if (getFile(KnownTable.CIRCLES).exists()) {
+            try {
+                Connection conn = createNewConnection();
+                PreparedStatement ps = conn.prepareStatement(
+                        "CALL SYSCS_UTIL.SYSCS_IMPORT_TABLE (?,?,?,?,?,?,?)");
+                ps.setString(1, null);
+                ps.setString(2, "CIRCLES");
+                ps.setString(3, getFile(KnownTable.CIRCLES).toString());
+                ps.setString(4, "%");
+                ps.setString(5, null);
+                ps.setString(6, null);
+                ps.setInt(7, 0);
+                ps.execute();
+                ps.close();
+                conn.close();
+                System.out.println("Read backed up copy of CIRCLES from " + getFile(KnownTable.CIRCLES).toString());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("No CIRCLES database backup found.");
+        }
+        if (getFile(KnownTable.IMAGES).exists()) {
+            try {
+                Connection conn = createNewConnection();
+                PreparedStatement ps = conn.prepareStatement(
+                        "CALL SYSCS_UTIL.SYSCS_IMPORT_TABLE (?,?,?,?,?,?,?)");
+                ps.setString(1, null);
+                ps.setString(2, "IMAGES");
+                ps.setString(3, getFile(KnownTable.IMAGES).toString());
+                ps.setString(4, "%");
+                ps.setString(5, null);
+                ps.setString(6, null);
+                ps.setInt(7, 0);
+                ps.execute();
+                ps.close();
+                conn.close();
+                System.out.println("Read backed up copy of IMAGES from " + getFile(KnownTable.IMAGES).toString());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("No IMAGES database backup found.");
         }
     }
 
@@ -183,7 +229,15 @@ public class DatabaseHelper {
         try {
             if (getFile(KnownTable.GAMES).exists()){
                 getFile(KnownTable.GAMES).delete();
-                System.out.println("Deleted existing database backup.");
+                System.out.println("Deleted existing GAMES database backup.");
+            }
+            if (getFile(KnownTable.CIRCLES).exists()){
+                getFile(KnownTable.CIRCLES).delete();
+                System.out.println("Deleted existing CIRCLES database backup.");
+            }
+            if (getFile(KnownTable.IMAGES).exists()){
+                getFile(KnownTable.IMAGES).delete();
+                System.out.println("Deleted existing IMAGES database backup.");
             }
             Connection conn = createNewConnection();
             PreparedStatement ps = conn.prepareStatement(
@@ -195,7 +249,27 @@ public class DatabaseHelper {
             ps.setString(5, null);
             ps.setString(6, null);
             ps.execute();
-            System.out.println("Backed up GAMES to " + getFile(KnownTable.GAMES).toString());
+            ps = conn.prepareStatement(
+                    "CALL SYSCS_UTIL.SYSCS_EXPORT_TABLE (?,?,?,?,?,?)");
+            ps.setString(1, null);
+            ps.setString(2, "CIRCLES");
+            ps.setString(3, getFile(KnownTable.CIRCLES).toString());
+            ps.setString(4, "%");
+            ps.setString(5, null);
+            ps.setString(6, null);
+            ps.execute();
+            ps = conn.prepareStatement(
+                    "CALL SYSCS_UTIL.SYSCS_EXPORT_TABLE (?,?,?,?,?,?)");
+            ps.setString(1, null);
+            ps.setString(2, "IMAGES");
+            ps.setString(3, getFile(KnownTable.IMAGES).toString());
+            ps.setString(4, "%");
+            ps.setString(5, null);
+            ps.setString(6, null);
+            ps.execute();
+            ps.close();
+            conn.close();
+            System.out.println("Backed up databases to file");
         } catch (Exception e) {
             e.printStackTrace();
         }
