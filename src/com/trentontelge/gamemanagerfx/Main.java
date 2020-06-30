@@ -2,6 +2,7 @@ package com.trentontelge.gamemanagerfx;
 
 import com.trentontelge.gamemanagerfx.database.DatabaseHelper;
 import com.trentontelge.gamemanagerfx.database.DatafileHelper;
+import com.trentontelge.gamemanagerfx.prototypes.Preferences;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -16,6 +17,7 @@ import static com.trentontelge.gamemanagerfx.database.DatabaseHelper.cleanTable;
 public class Main extends Application {
 
     public static File param;
+    public static Preferences prefs;
     public static final Stage importBarStage = new Stage();
     public static Runnable callback = () -> {};
 
@@ -27,6 +29,7 @@ public class Main extends Application {
         if (DatafileHelper.isFirstRun()){
             DatafileHelper.getParent().mkdirs();
         }
+        prefs = DatafileHelper.getPrefs();
         DatabaseHelper.createTable(DatabaseHelper.KnownTable.GAMES);
         DatabaseHelper.createTable(DatabaseHelper.KnownTable.CIRCLES);
         DatabaseHelper.createTable(DatabaseHelper.KnownTable.IMAGES);
