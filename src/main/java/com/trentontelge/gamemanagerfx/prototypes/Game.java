@@ -1,20 +1,21 @@
 package com.trentontelge.gamemanagerfx.prototypes;
 
 import com.trentontelge.gamemanagerfx.database.DatabaseHelper;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.sql.Date;
 
 public class Game {
-    private int id = 0, circleid = 0, size = 0;
+    private int id = 0, circleid = 0, size = 0, rating=0;
     private String RJCode, title, path, category, tags, comments, language;
-    private boolean rating, isRPGMaker;
+    private boolean isRPGMaker;
     private java.sql.Date releaseDate, addedDate;
 
     public Game() {
     }
 
-    public Game(int id, int circleid, int size, String RJCode, String title, String path, String category, String tags, String comments, String language, boolean rating, boolean isRPGMaker, Date releaseDate, Date addedDate) {
+    public Game(int id, int circleid, int size, String RJCode, String title, String path, String category, String tags, String comments, String language, int rating, boolean isRPGMaker, Date releaseDate, Date addedDate) {
         this.id = id;
         this.circleid = circleid;
         this.size = size;
@@ -31,7 +32,7 @@ public class Game {
         this.addedDate = addedDate;
     }
 
-    public Game(int circleid, int size, String RJCode, String title, String path, String category, String tags, String comments, String language, boolean rating, boolean isRPGMaker, Date releaseDate, Date addedDate) {
+    public Game(int circleid, int size, String RJCode, String title, String path, String category, String tags, String comments, String language, int rating, boolean isRPGMaker, Date releaseDate, Date addedDate) {
         this.circleid = circleid;
         this.size = size;
         this.RJCode = RJCode;
@@ -47,7 +48,7 @@ public class Game {
         this.addedDate = addedDate;
     }
 
-    public ImageView getVisibleImage() {
+    public Image getVisibleImage() {
         //TODO query images table by game ID and load to Image object
         return null;
     }
@@ -132,11 +133,11 @@ public class Game {
         this.language = language;
     }
 
-    public boolean getRating() {
+    public int getRating() {
         return rating;
     }
 
-    public void setRating(boolean rating) {
+    public void setRating(int rating) {
         this.rating = rating;
     }
 
@@ -166,5 +167,28 @@ public class Game {
 
     public String getCircleName() {
         return DatabaseHelper.getCircle(circleid).getName();
+    }
+
+    public Image getRatingImage() {
+        switch (getRating()){
+            case 1: {
+                return new Image("img\\1.png");
+            }
+            case 2: {
+                return new Image("img\\2.png");
+            }
+            case 3: {
+                return new Image("img\\3.png");
+            }
+            case 4: {
+                return new Image("img\\4.png");
+            }
+            case 5: {
+                return new Image("img\\5.png");
+            }
+            default: {
+                return new Image("img\\0.png");
+            }
+        }
     }
 }

@@ -26,7 +26,7 @@ public class MainController implements Initializable {
     public MenuItem importDBMenu;
     public MenuItem exportCSVMenu;
     public TableView<Game> gameTable;
-    public TableColumn<Game, ImageView> iconCol;
+    public TableColumn<Game, Image> iconCol;
     public TableColumn<Game, String> titleCol;
     public TableColumn<Game, String> circleCol;
     public TableColumn<Game, Image> ratingCol;
@@ -57,8 +57,33 @@ public class MainController implements Initializable {
                         titleDisplay.setText(previousSelection.getTitle());
                         circleDisplay.setText(previousSelection.getCircleName());
                         pathDisplay.setText(previousSelection.getPath());
-                        sizeDisplay.setText(String.valueOf(previousSelection.getSize())); //TODO get formatted size
-                        //TODO set rating image
+                        sizeDisplay.setText(previousSelection.getSize() + " Mb");
+                        switch (previousSelection.getRating()){
+                            case 1: {
+                                ratingDisplay.setImage(new Image("img\\1.png"));
+                                break;
+                            }
+                            case 2: {
+                                ratingDisplay.setImage(new Image("img\\2.png"));
+                                break;
+                            }
+                            case 3: {
+                                ratingDisplay.setImage(new Image("img\\3.png"));
+                                break;
+                            }
+                            case 4: {
+                                ratingDisplay.setImage(new Image("img\\4.png"));
+                                break;
+                            }
+                            case 5: {
+                                ratingDisplay.setImage(new Image("img\\5.png"));
+                                break;
+                            }
+                            default: {
+                                ratingDisplay.setImage(new Image("img\\0.png"));
+                                break;
+                            }
+                        }
                         releaseDateDisplay.setText(previousSelection.getReleaseDate().toString());
                         tagsDisplay.setText(previousSelection.getTags());
                         //TODO set images
@@ -83,8 +108,22 @@ public class MainController implements Initializable {
         iconCol.setCellValueFactory(new PropertyValueFactory<>("visibleImage"));
         titleCol.setCellValueFactory(new PropertyValueFactory<>("title"));
         circleCol.setCellValueFactory(new PropertyValueFactory<>("circleName"));
-        ratingCol.setCellValueFactory(new PropertyValueFactory<>("rating"));
-        sizeCol.setCellValueFactory(new PropertyValueFactory<>("rating"));
+        ratingCol.setCellFactory(param -> {
+            final ImageView imageview = new ImageView();
+            imageview.setFitHeight(15);
+            imageview.setFitWidth(15);
+            TableCell<Game, Image> cell = new TableCell<>() {
+                public void updateItem(Image item, boolean empty) {
+                    if (item != null) {
+                        imageview.setImage(item);
+                    }
+                }
+            };
+            cell.setGraphic(imageview);
+            return cell;
+        });
+        ratingCol.setCellValueFactory(new PropertyValueFactory<Game, Image>("ratingImage"));
+        sizeCol.setCellValueFactory(new PropertyValueFactory<>("size"));
         tagsCol.setCellValueFactory(new PropertyValueFactory<>("tags"));
 
         importDBMenu.setOnAction(e -> {

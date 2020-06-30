@@ -51,7 +51,7 @@ public class SQLiteHelper {
                 String rjCode = rs.getString(1);
                 String title = rs.getString(2);
                 String folderPath = rs.getString(3);
-                boolean rating = rs.getBoolean(4);
+                int rating = rs.getInt(4);
                 String workingDate = rs.getString(5) == null?"2000-01-01":rs.getString(5).substring(0, 10);
                 Date releaseDate = java.sql.Date.valueOf(workingDate);
                 workingDate = rs.getString(6) == null?"2000-01-01":rs.getString(6).substring(0, 10);

@@ -76,7 +76,7 @@ public class DatabaseHelper {
                                 RJCODE              varchar(255) default NULL,
                                 TITLE               varchar(255) default NULL,
                                 FOLDERPATH          varchar(255) default NULL,
-                                RATING              boolean      default NULL,
+                                RATING              integer      default NULL,
                                 RELEASEDATE         date     default NULL,
                                 ADDEDDATE           date     default NULL,
                                 CIRCLEID            integer      default NULL,
@@ -297,7 +297,7 @@ public class DatabaseHelper {
             ps.setString(2, game.getRJCode());
             ps.setString(3, game.getTitle());
             ps.setString(4, game.getPath());
-            ps.setBoolean(5, game.getRating());
+            ps.setInt(5, game.getRating());
             ps.setDate(6, game.getReleaseDate());
             ps.setDate(7, game.getAddedDate());
             ps.setInt(8, game.getCircleid());
@@ -334,7 +334,7 @@ public class DatabaseHelper {
                         rs.getString("TAGS"),
                         rs.getString("COMMENTS"),
                         rs.getString("LANG"),
-                        rs.getBoolean("RATING"),
+                        rs.getInt("RATING"),
                         rs.getBoolean("ISRPGMAKER"),
                         rs.getDate("RELEASEDATE"),
                         rs.getDate("ADDEDDATE"));
@@ -487,7 +487,7 @@ public class DatabaseHelper {
                         rs.getString("TAGS"),
                         rs.getString("COMMENTS"),
                         rs.getString("LANG"),
-                        rs.getBoolean("RATING"),
+                        rs.getInt("RATING"),
                         rs.getBoolean("ISRPGMAKER"),
                         rs.getDate("RELEASEDATE"),
                         rs.getDate("ADDEDDATE"));
