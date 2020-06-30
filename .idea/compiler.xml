@@ -11,6 +11,16 @@
       <entry name="!?*.kt" />
       <entry name="!?*.clj" />
     </wildcardResourcePatterns>
-    <bytecodeTargetLevel target="15" />
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="GameManagerFX" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel target="15">
+      <module name="GameManagerFX" target="15" />
+    </bytecodeTargetLevel>
   </component>
 </project>

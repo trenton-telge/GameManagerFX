@@ -34,7 +34,7 @@ public class Main extends Application {
         DatabaseHelper.createTable(DatabaseHelper.KnownTable.CIRCLES);
         DatabaseHelper.createTable(DatabaseHelper.KnownTable.IMAGES);
         DatabaseHelper.readDBFromFile();
-        Parent root = FXMLLoader.load(getClass().getResource("ui/mainlayout.fxml"));
+        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("mainlayout.fxml"));
         primaryStage.setTitle("GameManagerFX");
         primaryStage.setScene(new Scene(root, 1200, 700));
         primaryStage.show();
@@ -42,10 +42,9 @@ public class Main extends Application {
     }
 
     public static void showImportBar(Runnable updater){
-        Parent root;
         try {
             callback = updater;
-            root = FXMLLoader.load(Main.class.getResource("ui/importbarlayout.fxml"));
+            Parent root = FXMLLoader.load(Main.class.getClassLoader().getResource("importbarlayout.fxml"));
             importBarStage.setTitle("Import DB File");
             importBarStage.setScene(new Scene(root, 500,150));
             importBarStage.show();
