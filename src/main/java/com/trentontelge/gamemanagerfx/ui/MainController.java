@@ -6,14 +6,11 @@ import com.trentontelge.gamemanagerfx.prototypes.Game;
 import com.trentontelge.gamemanagerfx.util.DBFileFilter;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 
 import javax.swing.*;
@@ -45,7 +42,6 @@ public class MainController implements Initializable {
     public Label tagsDisplay;
     public Button editGameButton;
     public AnchorPane imageScrollpane;
-    private ObservableList<Game> data;
     private Game previousSelection;
 
     @Override
@@ -100,7 +96,7 @@ public class MainController implements Initializable {
                             iv.setY(x);
                             imageScrollpane.setPrefHeight(x);
                             imageScrollpane.getChildren().add(iv);
-                            x+=200;
+                            x+=iv.getFitHeight()+5;
                         }
                     }
                 }
@@ -172,15 +168,13 @@ public class MainController implements Initializable {
         exportCSVMenu.setOnAction( e -> {
             //TODO export games table to csv
         });
-        preferencesMenu.setOnAction( e-> {
-            Main.showPrefs();
-        });
+        preferencesMenu.setOnAction( e-> Main.showPrefs());
         refreshData();
     }
 
     protected void refreshData(){
         System.out.println("Refreshing data...");
-        data = FXCollections.observableList(DatabaseHelper.getAllGames());
+        ObservableList<Game> data = FXCollections.observableList(DatabaseHelper.getAllGames());
         gameTable.setItems(data);
         System.out.println("Data refreshed.");
     }
