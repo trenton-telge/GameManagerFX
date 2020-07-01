@@ -39,7 +39,10 @@ public class DatafileHelper {
         if (prefsFile.exists()){prefsFile.delete();}
         Gson gson = new Gson();
         try {
-            gson.toJson(prefs, new FileWriter(prefsFile));
+            FileWriter writer = new FileWriter(prefsFile);
+            gson.toJson(prefs, writer);
+            writer.flush();
+            writer.close();
             Main.prefs = prefs;
         } catch (IOException e) {
             e.printStackTrace();
@@ -53,6 +56,7 @@ public class DatafileHelper {
             Preferences p;
             try {
                 p = gson.fromJson(new FileReader(prefsFile), Preferences.class);
+                System.out.println(p.getLibraryHome());
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
                 p =  null;

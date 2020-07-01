@@ -25,6 +25,7 @@ public class MainController implements Initializable {
     public MenuItem addGameMenu;
     public MenuItem importDBMenu;
     public MenuItem exportCSVMenu;
+    public MenuItem preferencesMenu;
     public TableView<Game> gameTable;
     public TableColumn<Game, Image> iconCol;
     public TableColumn<Game, String> titleCol;
@@ -142,6 +143,9 @@ public class MainController implements Initializable {
         });
         exportCSVMenu.setOnAction( e -> {
             //TODO export games table to csv
+        });
+        preferencesMenu.setOnAction( e-> {
+            Main.showPrefs();
         });
         refreshData();
     }

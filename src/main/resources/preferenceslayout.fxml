@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.trentontelge.gamemanagerfx.ui.PreferencesController">
+    <TabPane prefHeight="380.0" prefWidth="300.0" tabClosingPolicy="UNAVAILABLE">
+        <Tab text="General">
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                <VBox prefHeight="376.0" prefWidth="300.0">
+                    <HBox prefWidth="200.0">
+                        <padding>
+                            <Insets left="10.0" />
+                        </padding>
+                        <VBox.margin>
+                            <Insets top="10.0" />
+                        </VBox.margin>
+                        <Label text="Games Directory" />
+                    </HBox>
+                    <HBox prefWidth="200.0">
+                        <padding>
+                            <Insets left="10.0" />
+                        </padding>
+                        <TextField fx:id="gamesHomeLocField" maxWidth="200.0" minWidth="200.0" prefWidth="200.0" />
+                        <Button fx:id="setGamesHomeButton" mnemonicParsing="false" text="Set">
+                            <HBox.margin>
+                                <Insets left="5.0" />
+                            </HBox.margin>
+                        </Button>
+                    </HBox>
+                    <HBox prefWidth="200.0">
+                        <VBox.margin>
+                            <Insets top="10.0" />
+                        </VBox.margin>
+                        <padding>
+                            <Insets left="10.0" />
+                        </padding>
+                        <CheckBox fx:id="moveGamesCheckbox" mnemonicParsing="false" text="Move games on addition" />
+                    </HBox>
+                </VBox>
+            </AnchorPane>
+        </Tab>
+        <Tab text="DLSite">
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+        </Tab>
+    </TabPane>
+   <Button fx:id="saveButton" layoutX="130.0" layoutY="369.0" mnemonicParsing="false" text="Save" />
+</AnchorPane>

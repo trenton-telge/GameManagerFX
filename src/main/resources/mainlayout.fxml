@@ -14,6 +14,7 @@
                <SeparatorMenuItem mnemonicParsing="false" />
                <MenuItem fx:id="importDBMenu" mnemonicParsing="false" text="Import Database" />
                <MenuItem fx:id="exportCSVMenu" mnemonicParsing="false" text="Export to CSV" />
+            <MenuItem fx:id="preferencesMenu" mnemonicParsing="false" text="Preferences" />
            </Menu>
            <Menu mnemonicParsing="false" text="Edit">
                <MenuItem mnemonicParsing="false" text="Unspecified Action" />
@@ -58,119 +59,103 @@
                <ScrollPane maxHeight="200.0" maxWidth="300.0" prefHeight="200.0" prefWidth="200.0">
                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
                </ScrollPane>
-            <HBox prefWidth="200.0">
-               <children>
-                  <Label minWidth="100.0" prefWidth="100.0" text="RJCode">
-                     <padding>
-                        <Insets left="10.0" />
-                     </padding>
-                  </Label>
-                  <Label fx:id="rjCodeDisplay" text="     " wrapText="true" />
-               </children>
-               <VBox.margin>
-                  <Insets top="10.0" />
-               </VBox.margin>
-            </HBox>
-            <HBox prefWidth="200.0">
-               <children>
-                  <Label minWidth="100.0" prefWidth="100.0" text="Title">
-                     <padding>
-                        <Insets left="10.0" />
-                     </padding>
-                  </Label>
-                  <Label fx:id="titleDisplay" text="     " wrapText="true" />
-               </children>
-               <padding>
-                  <Insets top="10.0" />
-               </padding>
-            </HBox>
-            <HBox prefWidth="200.0">
-               <children>
-                  <Label minWidth="100.0" prefWidth="100.0" text="Circle">
-                     <padding>
-                        <Insets left="10.0" />
-                     </padding>
-                  </Label>
-                  <Label fx:id="circleDisplay" text="     " wrapText="true" />
-               </children>
-               <VBox.margin>
-                  <Insets top="10.0" />
-               </VBox.margin>
-            </HBox>
-            <HBox prefWidth="200.0">
-               <children>
-                  <Label minWidth="100.0" prefWidth="100.0" text="Path">
-                     <padding>
-                        <Insets left="10.0" />
-                     </padding>
-                  </Label>
-                  <Label fx:id="pathDisplay" text="     " wrapText="true" />
-               </children>
-               <VBox.margin>
-                  <Insets top="10.0" />
-               </VBox.margin>
-            </HBox>
-            <HBox prefWidth="200.0">
-               <children>
-                  <Label minWidth="100.0" prefWidth="100.0" text="Size">
-                     <padding>
-                        <Insets left="10.0" />
-                     </padding>
-                  </Label>
-                  <Label fx:id="sizeDisplay" text="     " wrapText="true" />
-               </children>
-               <VBox.margin>
-                  <Insets top="10.0" />
-               </VBox.margin>
-            </HBox>
-            <HBox prefWidth="200.0">
-               <children>
-                  <Label minWidth="100.0" prefWidth="100.0" text="Rating">
-                     <padding>
-                        <Insets left="10.0" />
-                     </padding>
-                  </Label>
-                  <ImageView fx:id="ratingDisplay" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" />
-               </children>
-               <VBox.margin>
-                  <Insets top="10.0" />
-               </VBox.margin>
-            </HBox>
-            <HBox prefWidth="200.0">
-               <children>
-                  <Label minWidth="100.0" prefWidth="100.0" text="Released">
-                     <padding>
-                        <Insets left="10.0" />
-                     </padding>
-                  </Label>
-                  <Label fx:id="releaseDateDisplay" text="     " wrapText="true" />
-               </children>
-               <VBox.margin>
-                  <Insets top="10.0" />
-               </VBox.margin>
-            </HBox>
-            <HBox prefWidth="200.0">
-               <children>
-                  <Label minWidth="100.0" prefWidth="100.0" text="Tags">
-                     <padding>
-                        <Insets left="10.0" />
-                     </padding>
-                  </Label>
-                  <Label fx:id="tagsDisplay" text="     " wrapText="true" />
-               </children>
-               <VBox.margin>
-                  <Insets top="10.0" />
-               </VBox.margin>
-            </HBox>
-            <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0">
-               <children>
-                  <Button fx:id="editGameButton" alignment="CENTER_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false" text="Edit">
-                     <HBox.margin>
-                        <Insets right="10.0" top="10.0" />
-                     </HBox.margin>
-                  </Button>
-               </children>
-            </HBox>
+               <HBox prefWidth="200.0">
+                   <VBox.margin>
+                       <Insets top="10.0"/>
+                   </VBox.margin>
+                   <Label minWidth="100.0" prefWidth="100.0" text="RJCode">
+                       <padding>
+                           <Insets left="10.0"/>
+                       </padding>
+                   </Label>
+                   <Label fx:id="rjCodeDisplay" text="     " wrapText="true"/>
+               </HBox>
+               <HBox prefWidth="200.0">
+                   <padding>
+                       <Insets top="10.0"/>
+                   </padding>
+                   <Label minWidth="100.0" prefWidth="100.0" text="Title">
+                       <padding>
+                           <Insets left="10.0"/>
+                       </padding>
+                   </Label>
+                   <Label fx:id="titleDisplay" text="     " wrapText="true"/>
+               </HBox>
+               <HBox prefWidth="200.0">
+                   <VBox.margin>
+                       <Insets top="10.0"/>
+                   </VBox.margin>
+                   <Label minWidth="100.0" prefWidth="100.0" text="Circle">
+                       <padding>
+                           <Insets left="10.0"/>
+                       </padding>
+                   </Label>
+                   <Label fx:id="circleDisplay" text="     " wrapText="true"/>
+               </HBox>
+               <HBox prefWidth="200.0">
+                   <VBox.margin>
+                       <Insets top="10.0"/>
+                   </VBox.margin>
+                   <Label minWidth="100.0" prefWidth="100.0" text="Path">
+                       <padding>
+                           <Insets left="10.0"/>
+                       </padding>
+                   </Label>
+                   <Label fx:id="pathDisplay" text="     " wrapText="true"/>
+               </HBox>
+               <HBox prefWidth="200.0">
+                   <VBox.margin>
+                       <Insets top="10.0"/>
+                   </VBox.margin>
+                   <Label minWidth="100.0" prefWidth="100.0" text="Size">
+                       <padding>
+                           <Insets left="10.0"/>
+                       </padding>
+                   </Label>
+                   <Label fx:id="sizeDisplay" text="     " wrapText="true"/>
+               </HBox>
+               <HBox prefWidth="200.0">
+                   <VBox.margin>
+                       <Insets top="10.0"/>
+                   </VBox.margin>
+                   <Label minWidth="100.0" prefWidth="100.0" text="Rating">
+                       <padding>
+                           <Insets left="10.0"/>
+                       </padding>
+                   </Label>
+                   <ImageView fx:id="ratingDisplay" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true"
+                              preserveRatio="true"/>
+               </HBox>
+               <HBox prefWidth="200.0">
+                   <VBox.margin>
+                       <Insets top="10.0"/>
+                   </VBox.margin>
+                   <Label minWidth="100.0" prefWidth="100.0" text="Released">
+                       <padding>
+                           <Insets left="10.0"/>
+                       </padding>
+                   </Label>
+                   <Label fx:id="releaseDateDisplay" text="     " wrapText="true"/>
+               </HBox>
+               <HBox prefWidth="200.0">
+                   <VBox.margin>
+                       <Insets top="10.0"/>
+                   </VBox.margin>
+                   <Label minWidth="100.0" prefWidth="100.0" text="Tags">
+                       <padding>
+                           <Insets left="10.0"/>
+                       </padding>
+                   </Label>
+                   <Label fx:id="tagsDisplay" text="     " wrapText="true"/>
+               </HBox>
+               <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0">
+                   <Button fx:id="editGameButton" alignment="CENTER_RIGHT" contentDisplay="RIGHT"
+                           mnemonicParsing="false" text="Edit">
+                       <HBox.margin>
+                           <Insets right="10.0" top="10.0"/>
+                       </HBox.margin>
+                   </Button>
+               </HBox>
            </VBox>
        </GridPane>
    </right>

@@ -19,6 +19,7 @@ public class Main extends Application {
     public static File param;
     public static Preferences prefs;
     public static final Stage importBarStage = new Stage();
+    public static final Stage prefsStage = new Stage();
     public static Runnable callback = () -> {};
 
     @Override
@@ -48,6 +49,17 @@ public class Main extends Application {
             importBarStage.setTitle("Import DB File");
             importBarStage.setScene(new Scene(root, 500,150));
             importBarStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void showPrefs(){
+        try {
+            Parent root = FXMLLoader.load(Main.class.getClassLoader().getResource("preferenceslayout.fxml"));
+            prefsStage.setTitle("Preferences");
+            prefsStage.setScene(new Scene(root, 300, 400));
+            prefsStage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
