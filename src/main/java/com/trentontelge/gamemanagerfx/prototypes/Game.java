@@ -5,6 +5,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.sql.Date;
+import java.util.Vector;
 
 public class Game {
     private int id = 0, circleid = 0, size = 0, rating=0;
@@ -189,5 +190,9 @@ public class Game {
                 return new Image("img\\0.png");
             }
         }
+    }
+
+    public Vector<Image> getImages(){
+        return DatabaseHelper.getGameImages(this.id);
     }
 }

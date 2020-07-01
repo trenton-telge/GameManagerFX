@@ -569,4 +569,20 @@ public class DatabaseHelper {
         }
         return i;
     }
+
+    public static Vector<javafx.scene.image.Image> getGameImages(int gameID) {
+        Vector<javafx.scene.image.Image> v = new Vector<>();
+        try {
+            Connection conn = createNewConnection();
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM IMAGES WHERE GAMEID=?");
+            ps.setInt(1, gameID);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()){
+                v.add(new javafx.scene.image.Image("file:///" + Main.prefs.getLibraryHome() + System.getProperty("file.separator") + rs.getString("IMAGEPATH")));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return v;
+    }
 }

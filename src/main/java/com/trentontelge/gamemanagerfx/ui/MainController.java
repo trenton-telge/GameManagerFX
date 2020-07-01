@@ -8,11 +8,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 
 import javax.swing.*;
 import java.io.File;
@@ -42,6 +44,7 @@ public class MainController implements Initializable {
     public Label releaseDateDisplay;
     public Label tagsDisplay;
     public Button editGameButton;
+    public AnchorPane imageScrollpane;
     private ObservableList<Game> data;
     private Game previousSelection;
 
@@ -87,7 +90,18 @@ public class MainController implements Initializable {
                         }
                         releaseDateDisplay.setText(previousSelection.getReleaseDate().toString());
                         tagsDisplay.setText(previousSelection.getTags());
-                        //TODO set images
+                        imageScrollpane.getChildren().clear();
+                        int x = 0;
+                        for (Image i : previousSelection.getImages()){
+                            ImageView iv = new ImageView(i);
+                            iv.setPreserveRatio(true);
+                            iv.setFitHeight(200);
+                            iv.setFitWidth(300);
+                            iv.setY(x);
+                            imageScrollpane.setPrefHeight(x);
+                            imageScrollpane.getChildren().add(iv);
+                            x+=200;
+                        }
                     }
                 }
                 if (event.getClickCount() == 2 && (!row.isEmpty())) {

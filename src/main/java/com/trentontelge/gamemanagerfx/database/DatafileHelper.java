@@ -56,7 +56,6 @@ public class DatafileHelper {
             Preferences p;
             try {
                 p = gson.fromJson(new FileReader(prefsFile), Preferences.class);
-                System.out.println(p.getLibraryHome());
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
                 p =  null;
