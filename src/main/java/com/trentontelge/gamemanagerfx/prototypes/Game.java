@@ -48,9 +48,8 @@ public class Game {
         this.addedDate = addedDate;
     }
 
-    public Image getVisibleImage() {
-        //TODO query images table by game ID and load to Image object
-        return null;
+    public Image getListImage() {
+        return DatabaseHelper.getListImage(this.id);
     }
 
     public int getId() {

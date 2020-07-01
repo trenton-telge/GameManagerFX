@@ -106,13 +106,10 @@ public class MainController implements Initializable {
             });
             return row ;
         });
-        iconCol.setCellValueFactory(new PropertyValueFactory<>("visibleImage"));
-        titleCol.setCellValueFactory(new PropertyValueFactory<>("title"));
-        circleCol.setCellValueFactory(new PropertyValueFactory<>("circleName"));
-        ratingCol.setCellFactory(param -> {
+        iconCol.setCellFactory(param -> {
             final ImageView imageview = new ImageView();
-            imageview.setFitHeight(15);
-            imageview.setFitWidth(15);
+            imageview.setFitHeight(20);
+            imageview.setFitWidth(20);
             TableCell<Game, Image> cell = new TableCell<>() {
                 public void updateItem(Image item, boolean empty) {
                     if (item != null) {
@@ -123,7 +120,24 @@ public class MainController implements Initializable {
             cell.setGraphic(imageview);
             return cell;
         });
-        ratingCol.setCellValueFactory(new PropertyValueFactory<Game, Image>("ratingImage"));
+        iconCol.setCellValueFactory(new PropertyValueFactory<>("listImage"));
+        titleCol.setCellValueFactory(new PropertyValueFactory<>("title"));
+        circleCol.setCellValueFactory(new PropertyValueFactory<>("circleName"));
+        ratingCol.setCellFactory(param -> {
+            final ImageView imageview = new ImageView();
+            imageview.setFitHeight(20);
+            imageview.setFitWidth(20);
+            TableCell<Game, Image> cell = new TableCell<>() {
+                public void updateItem(Image item, boolean empty) {
+                    if (item != null) {
+                        imageview.setImage(item);
+                    }
+                }
+            };
+            cell.setGraphic(imageview);
+            return cell;
+        });
+        ratingCol.setCellValueFactory(new PropertyValueFactory<>("ratingImage"));
         sizeCol.setCellValueFactory(new PropertyValueFactory<>("size"));
         tagsCol.setCellValueFactory(new PropertyValueFactory<>("tags"));
 

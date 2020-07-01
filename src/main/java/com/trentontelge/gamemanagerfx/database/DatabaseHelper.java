@@ -553,4 +553,20 @@ public class DatabaseHelper {
             throwables.printStackTrace();
         }
     }
+
+    public static javafx.scene.image.Image getListImage(int gameID){
+        javafx.scene.image.Image i = new javafx.scene.image.Image("img\\0.png");
+        try {
+            Connection conn = createNewConnection();
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM IMAGES WHERE GAMEID=? AND ISLISTIMAGE=true");
+            ps.setInt(1, gameID);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()){
+                i = new javafx.scene.image.Image("file:///" + Main.prefs.getLibraryHome() + System.getProperty("file.separator") +  rs.getString("IMAGEPATH"));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return i;
+    }
 }
