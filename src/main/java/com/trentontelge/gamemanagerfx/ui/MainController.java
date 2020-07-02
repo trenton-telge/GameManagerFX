@@ -1,10 +1,8 @@
 package com.trentontelge.gamemanagerfx.ui;
 
-import com.google.gson.Gson;
 import com.trentontelge.gamemanagerfx.Main;
 import com.trentontelge.gamemanagerfx.database.DatabaseHelper;
 import com.trentontelge.gamemanagerfx.database.DatafileHelper;
-import com.trentontelge.gamemanagerfx.prototypes.Circle;
 import com.trentontelge.gamemanagerfx.prototypes.Game;
 import com.trentontelge.gamemanagerfx.util.DBFileFilter;
 import javafx.collections.FXCollections;
@@ -18,7 +16,6 @@ import javafx.scene.layout.AnchorPane;
 
 import javax.swing.*;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;

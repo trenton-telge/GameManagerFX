@@ -1,5 +1,6 @@
 package com.trentontelge.gamemanagerfx.prototypes;
 
+@SuppressWarnings("unused")
 public class Circle {
     int circleID;
     String rgCode, name;

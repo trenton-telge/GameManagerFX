@@ -7,6 +7,7 @@ import javafx.scene.image.ImageView;
 import java.sql.Date;
 import java.util.Vector;
 
+@SuppressWarnings("unused")
 public class Game {
     private int id = 0, circleid = 0, size = 0, rating=0;
     private String RJCode, title, path, category, tags, comments, language;

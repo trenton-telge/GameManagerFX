@@ -1,5 +1,6 @@
 package com.trentontelge.gamemanagerfx.prototypes;
 
+@SuppressWarnings("unused")
 public class Image {
     private int imageid, gameid;
     private boolean islistimage, iscoverimage;
