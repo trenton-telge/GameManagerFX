@@ -339,6 +339,8 @@ public class DatabaseHelper {
                         rs.getDate("RELEASEDATE"),
                         rs.getDate("ADDEDDATE"));
             }
+            ps.close();
+            conn.close();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -438,6 +440,23 @@ public class DatabaseHelper {
         return c;
     }
 
+    public static Vector<Circle> getAllCircles() {
+        Vector<Circle> v = new Vector<>();
+        try {
+            Connection conn = createNewConnection();
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM CIRCLES");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()){
+                v.add(new Circle(rs.getInt("CIRCLEID"), rs.getString("RGCODE"), rs.getString("TITLE")));
+            }
+            ps.close();
+            conn.close();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return v;
+    }
+
     protected static int countOfGames(){
         int n = 0;
         try {
@@ -493,6 +512,8 @@ public class DatabaseHelper {
                         rs.getDate("ADDEDDATE"));
                 v.add(g);
             }
+            ps.close();
+            conn.close();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -564,6 +585,8 @@ public class DatabaseHelper {
             if (rs.next()){
                 i = new javafx.scene.image.Image("file:///" + Main.prefs.getLibraryHome() + System.getProperty("file.separator") +  rs.getString("IMAGEPATH"));
             }
+            ps.close();
+            conn.close();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -580,6 +603,25 @@ public class DatabaseHelper {
             while (rs.next()){
                 v.add(new javafx.scene.image.Image("file:///" + Main.prefs.getLibraryHome() + System.getProperty("file.separator") + rs.getString("IMAGEPATH")));
             }
+            ps.close();
+            conn.close();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return v;
+    }
+
+    public static Vector<Image> getAllImages() {
+        Vector<Image> v = new Vector<>();
+        try {
+            Connection conn = createNewConnection();
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM IMAGES");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()){
+                v.add(new Image(rs.getInt("IMAGEID"), rs.getInt("GAMEID"), rs.getBoolean("ISLISTIMAGE"), rs.getBoolean("ISCOVERIMAGE"), rs.getString("IMAGEPATH")));
+            }
+            ps.close();
+            conn.close();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

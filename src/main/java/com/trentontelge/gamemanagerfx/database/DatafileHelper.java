@@ -2,8 +2,12 @@ package com.trentontelge.gamemanagerfx.database;
 
 import com.google.gson.Gson;
 import com.trentontelge.gamemanagerfx.Main;
+import com.trentontelge.gamemanagerfx.prototypes.Circle;
+import com.trentontelge.gamemanagerfx.prototypes.Game;
+import com.trentontelge.gamemanagerfx.prototypes.Image;
 import com.trentontelge.gamemanagerfx.prototypes.Preferences;
 
+import javax.swing.*;
 import java.io.*;
 
 public class DatafileHelper {
@@ -66,6 +70,36 @@ public class DatafileHelper {
             System.out.println("No preferencess file detected");
             setPrefs(new Preferences(System.getProperty("user.home") + System.getProperty("file.separator") + "My Games" + System.getProperty("file.separator"), false));
             return getPrefs();
+        }
+    }
+
+    public static void saveDBAsJSON() {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Save Database as JSON");
+        fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        fileChooser.setSelectedFile(new File("games.json"));
+        int userSelection = fileChooser.showSaveDialog(new JFrame("Save Database as JSON"));
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+            File fileToSave = fileChooser.getSelectedFile();
+            Gson gson = new Gson();
+            try {
+                FileWriter writer = new FileWriter(fileToSave);
+                for(Game g : DatabaseHelper.getAllGames()) {
+                    gson.toJson(g, writer);
+                }
+                for (Image i : DatabaseHelper.getAllImages()) {
+                    gson.toJson(i, writer);
+                }
+                for (Circle c : DatabaseHelper.getAllCircles()) {
+                    gson.toJson(c, writer);
+                }
+                writer.flush();
+                writer.close();
+                System.out.println("Exported library to JSON at " + fileToSave);
+            } catch (IOException e2) {
+                e2.printStackTrace();
+            }
         }
     }
 }

@@ -1,7 +1,10 @@
 package com.trentontelge.gamemanagerfx.ui;
 
+import com.google.gson.Gson;
 import com.trentontelge.gamemanagerfx.Main;
 import com.trentontelge.gamemanagerfx.database.DatabaseHelper;
+import com.trentontelge.gamemanagerfx.database.DatafileHelper;
+import com.trentontelge.gamemanagerfx.prototypes.Circle;
 import com.trentontelge.gamemanagerfx.prototypes.Game;
 import com.trentontelge.gamemanagerfx.util.DBFileFilter;
 import javafx.collections.FXCollections;
@@ -15,6 +18,7 @@ import javafx.scene.layout.AnchorPane;
 
 import javax.swing.*;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -23,7 +27,7 @@ public class MainController implements Initializable {
     public MenuItem closeMenu;
     public MenuItem addGameMenu;
     public MenuItem importDBMenu;
-    public MenuItem exportCSVMenu;
+    public MenuItem exportJSONMenu;
     public MenuItem preferencesMenu;
     public TableView<Game> gameTable;
     public TableColumn<Game, Image> iconCol;
@@ -165,8 +169,8 @@ public class MainController implements Initializable {
         addGameMenu.setOnAction(e -> {
             //TODO open add game modal
         });
-        exportCSVMenu.setOnAction( e -> {
-            //TODO export games table to csv
+        exportJSONMenu.setOnAction(e -> {
+            DatafileHelper.saveDBAsJSON();
         });
         preferencesMenu.setOnAction( e-> Main.showPrefs());
         refreshData();

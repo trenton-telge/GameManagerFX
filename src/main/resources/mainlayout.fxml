@@ -13,7 +13,7 @@
                <MenuItem fx:id="addGameMenu" mnemonicParsing="false" text="Add Game" />
                <SeparatorMenuItem mnemonicParsing="false" />
                <MenuItem fx:id="importDBMenu" mnemonicParsing="false" text="Import Database" />
-               <MenuItem fx:id="exportCSVMenu" mnemonicParsing="false" text="Export to CSV" />
+               <MenuItem fx:id="exportJSONMenu" mnemonicParsing="false" text="Export to JSON" />
             <MenuItem fx:id="preferencesMenu" mnemonicParsing="false" text="Preferences" />
            </Menu>
            <Menu mnemonicParsing="false" text="Edit">
