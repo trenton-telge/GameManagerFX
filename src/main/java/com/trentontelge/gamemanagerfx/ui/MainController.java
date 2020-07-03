@@ -5,6 +5,7 @@ import com.trentontelge.gamemanagerfx.database.DatabaseHelper;
 import com.trentontelge.gamemanagerfx.database.DatafileHelper;
 import com.trentontelge.gamemanagerfx.prototypes.Game;
 import com.trentontelge.gamemanagerfx.util.DBFileFilter;
+import com.trentontelge.gamemanagerfx.util.GameFileFilter;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.Initializable;
@@ -15,9 +16,11 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
@@ -51,55 +54,7 @@ public class MainController implements Initializable {
             TableRow<Game> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 1 && (!row.isEmpty())) {
-                    if (!gameTable.getSelectionModel().getSelectedItem().equals(previousSelection)){
-                        previousSelection = gameTable.getSelectionModel().getSelectedItem();
-                        resetLabels();
-                        rjCodeDisplay.setText(previousSelection.getRJCode());
-                        titleDisplay.setText(previousSelection.getTitle());
-                        circleDisplay.setText(previousSelection.getCircleName());
-                        pathDisplay.setText(previousSelection.getPath());
-                        sizeDisplay.setText(previousSelection.getSize() + " Mb");
-                        switch (previousSelection.getRating()){
-                            case 1: {
-                                ratingDisplay.setImage(new Image("img\\1.png"));
-                                break;
-                            }
-                            case 2: {
-                                ratingDisplay.setImage(new Image("img\\2.png"));
-                                break;
-                            }
-                            case 3: {
-                                ratingDisplay.setImage(new Image("img\\3.png"));
-                                break;
-                            }
-                            case 4: {
-                                ratingDisplay.setImage(new Image("img\\4.png"));
-                                break;
-                            }
-                            case 5: {
-                                ratingDisplay.setImage(new Image("img\\5.png"));
-                                break;
-                            }
-                            default: {
-                                ratingDisplay.setImage(new Image("img\\0.png"));
-                                break;
-                            }
-                        }
-                        releaseDateDisplay.setText(previousSelection.getReleaseDate().toString());
-                        tagsDisplay.setText(previousSelection.getTags());
-                        imageScrollpane.getChildren().clear();
-                        int x = 0;
-                        for (Image i : previousSelection.getImages()){
-                            ImageView iv = new ImageView(i);
-                            iv.setPreserveRatio(true);
-                            iv.setFitHeight(200);
-                            iv.setFitWidth(300);
-                            iv.setY(x);
-                            imageScrollpane.setPrefHeight(x);
-                            imageScrollpane.getChildren().add(iv);
-                            x+=iv.getFitHeight()+5;
-                        }
-                    }
+                    checkAndChangeDetails();
                 }
                 if (event.getClickCount() == 2 && (!row.isEmpty())) {
                     if (new File(gameTable.getSelectionModel().getSelectedItem().getPath()).exists()) {
@@ -164,7 +119,21 @@ public class MainController implements Initializable {
             }
         });
         addGameMenu.setOnAction(e -> {
-            //TODO open add game modal
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setAcceptAllFileFilterUsed(false);
+            fileChooser.addChoosableFileFilter(new GameFileFilter());
+            int returnVal = fileChooser.showDialog(new JFrame("Add Game"), "Add Game");
+            if (returnVal == JFileChooser.APPROVE_OPTION){
+                int id = DatabaseHelper.writeGame(new Game(0, 0, "", fileChooser.getSelectedFile().getParent().substring(fileChooser.getSelectedFile().getParent().lastIndexOf("\\")+1), fileChooser.getSelectedFile().toString(), "", "", "", "", 0, false, java.sql.Date.valueOf("2001-01-01"), java.sql.Date.valueOf(LocalDate.now())));
+                refreshData();
+                for (Game g : gameTable.getItems()){
+                    if (g.getId() == id){
+                        gameTable.getSelectionModel().select(gameTable.getItems().indexOf(g));
+                    }
+                }
+                checkAndChangeDetails();
+                //TODO open edit mode
+            }
         });
         exportJSONMenu.setOnAction(e -> {
             DatafileHelper.saveDBAsJSON();
@@ -172,7 +141,6 @@ public class MainController implements Initializable {
         preferencesMenu.setOnAction( e-> Main.showPrefs());
         refreshData();
     }
-
     protected void refreshData(){
         System.out.println("Refreshing data...");
         ObservableList<Game> data = FXCollections.observableList(DatabaseHelper.getAllGames());
@@ -188,5 +156,56 @@ public class MainController implements Initializable {
         ratingDisplay.setImage(new Image("img\\0.png"));
         releaseDateDisplay.setText("     ");
         tagsDisplay.setText("     ");
+    }
+    protected void checkAndChangeDetails(){
+        if (!gameTable.getSelectionModel().getSelectedItem().equals(previousSelection)){
+            previousSelection = gameTable.getSelectionModel().getSelectedItem();
+            resetLabels();
+            rjCodeDisplay.setText(previousSelection.getRJCode());
+            titleDisplay.setText(previousSelection.getTitle());
+            circleDisplay.setText(previousSelection.getCircleName());
+            pathDisplay.setText(previousSelection.getPath());
+            sizeDisplay.setText(previousSelection.getSize() + " Mb");
+            switch (previousSelection.getRating()){
+                case 1: {
+                    ratingDisplay.setImage(new Image("img\\1.png"));
+                    break;
+                }
+                case 2: {
+                    ratingDisplay.setImage(new Image("img\\2.png"));
+                    break;
+                }
+                case 3: {
+                    ratingDisplay.setImage(new Image("img\\3.png"));
+                    break;
+                }
+                case 4: {
+                    ratingDisplay.setImage(new Image("img\\4.png"));
+                    break;
+                }
+                case 5: {
+                    ratingDisplay.setImage(new Image("img\\5.png"));
+                    break;
+                }
+                default: {
+                    ratingDisplay.setImage(new Image("img\\0.png"));
+                    break;
+                }
+            }
+            releaseDateDisplay.setText(previousSelection.getReleaseDate().toString());
+            tagsDisplay.setText(previousSelection.getTags());
+            imageScrollpane.getChildren().clear();
+            int x = 0;
+            for (Image i : previousSelection.getImages()){
+                ImageView iv = new ImageView(i);
+                iv.setPreserveRatio(true);
+                iv.setFitHeight(200);
+                iv.setFitWidth(300);
+                iv.setY(x);
+                imageScrollpane.setPrefHeight(x);
+                imageScrollpane.getChildren().add(iv);
+                x+=iv.getFitHeight()+5;
+            }
+        }
     }
 }

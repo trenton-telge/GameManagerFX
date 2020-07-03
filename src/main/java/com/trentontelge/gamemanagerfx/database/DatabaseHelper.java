@@ -284,7 +284,71 @@ public class DatabaseHelper {
         }
     }
 
-    public static void writeGame(Game game){
+    protected static int countOfGames(){
+        int n = 0;
+        try {
+            Connection conn = createNewConnection();
+            PreparedStatement ps = conn.prepareStatement("SELECT COUNT(*) FROM GAMES");
+            ResultSet rs = ps.executeQuery();
+            rs.next();
+            n = rs.getInt(1);
+            ps.close();
+            conn.close();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return n;
+    }
+
+    protected  static  boolean gameIDExists(int id){
+        boolean e = false;
+        try {
+            Connection conn = createNewConnection();
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM GAMES WHERE GAMEID=?");
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            e = rs.next();
+            ps.close();
+            conn.close();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return e;
+    }
+
+    public static Vector<Game> getAllGames(){
+        Vector<Game> v = new Vector<>();
+        try {
+            Connection conn = createNewConnection();
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM GAMES");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()){
+                Game g = new Game(rs.getInt("GAMEID"),
+                        rs.getInt("CIRCLEID"),
+                        rs.getInt("SIZE"),
+                        rs.getString("RJCODE"),
+                        rs.getString("TITLE"),
+                        rs.getString("FOLDERPATH"),
+                        rs.getString("CATEGORY"),
+                        rs.getString("TAGS"),
+                        rs.getString("COMMENTS"),
+                        rs.getString("LANG"),
+                        rs.getInt("RATING"),
+                        rs.getBoolean("ISRPGMAKER"),
+                        rs.getDate("RELEASEDATE"),
+                        rs.getDate("ADDEDDATE"));
+                v.add(g);
+            }
+            ps.close();
+            conn.close();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        System.out.println("Read "+ v.size() +" games to array.");
+        return v;
+    }
+
+    public static int writeGame(Game game){
         int id = countOfGames() + 1;
         while (gameIDExists(id)){
             id++;
@@ -314,6 +378,7 @@ public class DatabaseHelper {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return id;
     }
 
     public static Game getGame(String title){
@@ -454,70 +519,6 @@ public class DatabaseHelper {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        return v;
-    }
-
-    protected static int countOfGames(){
-        int n = 0;
-        try {
-            Connection conn = createNewConnection();
-            PreparedStatement ps = conn.prepareStatement("SELECT COUNT(*) FROM GAMES");
-            ResultSet rs = ps.executeQuery();
-            rs.next();
-            n = rs.getInt(1);
-            ps.close();
-            conn.close();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        return n;
-    }
-
-    protected  static  boolean gameIDExists(int id){
-        boolean e = false;
-        try {
-            Connection conn = createNewConnection();
-            PreparedStatement ps = conn.prepareStatement("SELECT * FROM GAMES WHERE GAMEID=?");
-            ps.setInt(1, id);
-            ResultSet rs = ps.executeQuery();
-            e = rs.next();
-            ps.close();
-            conn.close();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        return e;
-    }
-
-    public static Vector<Game> getAllGames(){
-        Vector<Game> v = new Vector<>();
-        try {
-            Connection conn = createNewConnection();
-            PreparedStatement ps = conn.prepareStatement("SELECT * FROM GAMES");
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()){
-                Game g = new Game(rs.getInt("GAMEID"),
-                        rs.getInt("CIRCLEID"),
-                        rs.getInt("SIZE"),
-                        rs.getString("RJCODE"),
-                        rs.getString("TITLE"),
-                        rs.getString("FOLDERPATH"),
-                        rs.getString("CATEGORY"),
-                        rs.getString("TAGS"),
-                        rs.getString("COMMENTS"),
-                        rs.getString("LANG"),
-                        rs.getInt("RATING"),
-                        rs.getBoolean("ISRPGMAKER"),
-                        rs.getDate("RELEASEDATE"),
-                        rs.getDate("ADDEDDATE"));
-                v.add(g);
-            }
-            ps.close();
-            conn.close();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        System.out.println("Read "+ v.size() +" games to array.");
         return v;
     }
 
