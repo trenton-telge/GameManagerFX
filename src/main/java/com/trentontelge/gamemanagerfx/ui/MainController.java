@@ -16,7 +16,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 
 import javax.swing.*;
-import javax.swing.filechooser.FileFilter;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -135,9 +134,7 @@ public class MainController implements Initializable {
                 //TODO open edit mode
             }
         });
-        exportJSONMenu.setOnAction(e -> {
-            DatafileHelper.saveDBAsJSON();
-        });
+        exportJSONMenu.setOnAction( e -> DatafileHelper.saveDBAsJSON());
         preferencesMenu.setOnAction( e-> Main.showPrefs());
         refreshData();
     }

@@ -2,7 +2,6 @@ package com.trentontelge.gamemanagerfx.prototypes;
 
 import com.trentontelge.gamemanagerfx.database.DatabaseHelper;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 
 import java.sql.Date;
 import java.util.Vector;

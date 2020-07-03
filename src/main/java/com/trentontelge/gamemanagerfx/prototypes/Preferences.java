@@ -1,5 +1,6 @@
 package com.trentontelge.gamemanagerfx.prototypes;
 
+@SuppressWarnings("unused")
 public class Preferences {
     private String libraryHome;
     private boolean moveGames;
