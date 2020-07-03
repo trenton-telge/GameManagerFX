@@ -6,16 +6,21 @@ import com.trentontelge.gamemanagerfx.database.DatafileHelper;
 import com.trentontelge.gamemanagerfx.prototypes.Game;
 import com.trentontelge.gamemanagerfx.util.DBFileFilter;
 import com.trentontelge.gamemanagerfx.util.GameFileFilter;
+import com.trentontelge.gamemanagerfx.util.OSChecker;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -51,22 +56,51 @@ public class MainController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         gameTable.setRowFactory( tv -> {
             TableRow<Game> row = new TableRow<>();
+            final ContextMenu rowMenu = new ContextMenu();
+            MenuItem runItem = new MenuItem("Run game");
+            runItem.setOnAction(e-> runGame(gameTable.getSelectionModel().getSelectedItem()));
+            MenuItem openInFilesystemItem = new MenuItem("Open in filesystem");
+            switch (OSChecker.getOperatingSystemType()){
+                case WINDOWS ->  openInFilesystemItem = new MenuItem("Open in Explorer");
+                case MAC_OS ->  openInFilesystemItem = new MenuItem("Open in Finder");
+            }
+            openInFilesystemItem.setOnAction(e->{
+                Desktop desktop = Desktop.getDesktop();
+                try {
+                    desktop.open(new File(new File(gameTable.getSelectionModel().getSelectedItem().getPath()).getParent()));
+                    System.out.println("Opened " + new File(new File(gameTable.getSelectionModel().getSelectedItem().getPath()).getParent()) + " in filesystem");
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
+            });
+            MenuItem deleteFromList = new MenuItem("Remove from list");
+            deleteFromList.setOnAction(e->{
+                String name = gameTable.getSelectionModel().getSelectedItem().getTitle();
+                DatabaseHelper.deleteGame(gameTable.getSelectionModel().getSelectedItem().getId());
+                refreshData();
+                System.out.println("Deleted " + name + " from list");
+                gameTable.getSelectionModel().select(1);
+            });
+            MenuItem deleteItem = new MenuItem("Delete from disk");
+            deleteItem.setOnAction(e->{
+                String name = gameTable.getSelectionModel().getSelectedItem().getTitle();
+                int response = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete " + gameTable.getSelectionModel().getSelectedItem().getTitle() + " permanently from the disk?", "Are you sure?", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+                if (response == JOptionPane.YES_OPTION){
+                    DatabaseHelper.deleteGame(gameTable.getSelectionModel().getSelectedItem().getId());
+                    refreshData();
+                    new File(new File(gameTable.getSelectionModel().getSelectedItem().getPath()).getParent()).delete();
+                    System.out.println("Deleted " + name + " from disk");
+                    gameTable.getSelectionModel().select(1);
+                }
+            });
+            rowMenu.getItems().addAll(runItem, openInFilesystemItem, deleteFromList, deleteItem);
+            row.setContextMenu(rowMenu);
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 1 && (!row.isEmpty())) {
                     checkAndChangeDetails();
                 }
                 if (event.getClickCount() == 2 && (!row.isEmpty())) {
-                    if (new File(gameTable.getSelectionModel().getSelectedItem().getPath()).exists()) {
-                        System.out.println("Attempt to run " + gameTable.getSelectionModel().getSelectedItem().getPath());
-                        try {
-                            Runtime.getRuntime().exec(gameTable.getSelectionModel().getSelectedItem().getPath());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    } else {
-                        //TODO show error dialog
-                        System.out.println("Game executable not found");
-                    }
+                    runGame(gameTable.getSelectionModel().getSelectedItem());
                 }
             });
             return row ;
@@ -203,6 +237,20 @@ public class MainController implements Initializable {
                 imageScrollpane.getChildren().add(iv);
                 x+=iv.getFitHeight()+5;
             }
+        }
+    }
+    protected void runGame(Game g){
+        //TODO add run support for non-Windows and HTML games, and add dynamic pathing
+        if (new File(g.getPath()).exists()) {
+            System.out.println("Attempt to run " + g.getPath());
+            try {
+                Runtime.getRuntime().exec(g.getPath());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            //TODO show error dialog
+            System.out.println("Game executable not found");
         }
     }
 }

@@ -375,6 +375,7 @@ public class DatabaseHelper {
             ps.close();
             conn.close();
             System.out.println("Added game " + game.getTitle());
+            writeDBToFile();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -410,6 +411,23 @@ public class DatabaseHelper {
             throwables.printStackTrace();
         }
         return g;
+    }
+
+    public static void deleteGame(int id){
+        try {
+            Connection conn = createNewConnection();
+            PreparedStatement ps = conn.prepareStatement("DELETE FROM GAMES WHERE GAMEID=?");
+            ps.setInt(1, id);
+            ps.executeUpdate();
+            ps = conn.prepareStatement("DELETE FROM IMAGES WHERE GAMEID=?");
+            ps.setInt(1, id);
+            ps.executeUpdate();
+            //TODO delete images from filesystem
+            //TODO check if circle name is still used and delete if not
+            writeDBToFile();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 
     public static void writeCircle(Circle circle){
