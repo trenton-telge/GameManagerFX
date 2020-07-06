@@ -67,7 +67,7 @@ public class MainController implements Initializable {
             openInFilesystemItem.setOnAction(e->{
                 Desktop desktop = Desktop.getDesktop();
                 try {
-                    desktop.open(new File(new File(gameTable.getSelectionModel().getSelectedItem().getPath()).getParent()));
+                    desktop.open(new File(new File(gameTable.getSelectionModel().getSelectedItem().getPath()).getParent() + System.getProperty("file.separator")));
                     System.out.println("Opened " + new File(new File(gameTable.getSelectionModel().getSelectedItem().getPath()).getParent()) + " in filesystem");
                 } catch (IOException ioException) {
                     ioException.printStackTrace();
@@ -243,10 +243,45 @@ public class MainController implements Initializable {
         //TODO add run support for non-Windows and HTML games, and add dynamic pathing
         if (new File(g.getPath()).exists()) {
             System.out.println("Attempt to run " + g.getPath());
-            try {
-                Runtime.getRuntime().exec(g.getPath());
-            } catch (IOException e) {
-                e.printStackTrace();
+            if (g.getPath().toLowerCase().endsWith(".exe")) {
+                try {
+                    Runtime.getRuntime().exec(g.getPath());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else if (g.getPath().toLowerCase().endsWith(".app")) {
+                try {
+                    Desktop.getDesktop().open(new File(g.getPath()));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else if (g.getPath().toLowerCase().endsWith(".html")) {
+                try {
+                    Desktop.getDesktop().open(new File(g.getPath()));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        } else if (new File(Main.prefs.getLibraryHome() + System.getProperty("file.separator") + g.getPath()).exists()) {
+            System.out.println("Attempt to run " + g.getPath());
+            if (g.getPath().toLowerCase().endsWith(".exe")) {
+                try {
+                    Runtime.getRuntime().exec(Main.prefs.getLibraryHome() + System.getProperty("file.separator") + g.getPath());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else if (g.getPath().toLowerCase().endsWith(".app")) {
+                try {
+                    Desktop.getDesktop().open(new File(Main.prefs.getLibraryHome() + System.getProperty("file.separator") + g.getPath()));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else if (g.getPath().toLowerCase().endsWith(".html")) {
+                try {
+                    Desktop.getDesktop().open(new File(Main.prefs.getLibraryHome() + System.getProperty("file.separator") + g.getPath()));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         } else {
             //TODO show error dialog
