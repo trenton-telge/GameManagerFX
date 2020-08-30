@@ -14,6 +14,8 @@ import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -50,10 +52,23 @@ public class MainController implements Initializable {
     public Label tagsDisplay;
     public Button editGameButton;
     public AnchorPane imageScrollpane;
+    public TextField rjCodeField;
+    public TextField titleField;
+    public ComboBox circleSelector;
+    public Button addCircleButton;
+    public TextField pathField;
+    public Button pathBrowseButton;
+    public TextField sizeField;
+    public Button sizeCalculateButton;
+    public ChoiceBox ratingSelector;
+    public DatePicker releaseDateSelector;
+    public TextArea tagField;
+    public Button saveButton;
     private Game previousSelection;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        viewMode();
         gameTable.setRowFactory( tv -> {
             TableRow<Game> row = new TableRow<>();
             final ContextMenu rowMenu = new ContextMenu();
@@ -165,8 +180,14 @@ public class MainController implements Initializable {
                     }
                 }
                 checkAndChangeDetails();
-                //TODO open edit mode
+                editGame();
             }
+        });
+        saveButton.setOnAction(e -> {
+            saveEdit();
+        });
+        editGameButton.setOnAction(e -> {
+            editGame();
         });
         exportJSONMenu.setOnAction( e -> DatafileHelper.saveDBAsJSON());
         preferencesMenu.setOnAction( e-> Main.showPrefs());
@@ -190,6 +211,7 @@ public class MainController implements Initializable {
     }
     protected void checkAndChangeDetails(){
         if (!gameTable.getSelectionModel().getSelectedItem().equals(previousSelection)){
+            viewMode();
             previousSelection = gameTable.getSelectionModel().getSelectedItem();
             resetLabels();
             rjCodeDisplay.setText(previousSelection.getRJCode());
@@ -287,5 +309,79 @@ public class MainController implements Initializable {
             //TODO show error dialog
             System.out.println("Game executable not found");
         }
+    }
+    protected void editGame(){
+        rjCodeDisplay.setVisible(false);
+        rjCodeDisplay.setMaxWidth(0);
+        titleDisplay.setVisible(false);
+        titleDisplay.setMaxWidth(0);
+        circleDisplay.setVisible(false);
+        circleDisplay.setMaxWidth(0);
+        pathDisplay.setVisible(false);
+        pathDisplay.setMaxWidth(0);
+        sizeDisplay.setVisible(false);
+        sizeDisplay.setMaxWidth(0);
+        ratingDisplay.setVisible(false);
+        releaseDateDisplay.setVisible(false);
+        releaseDateDisplay.setMaxWidth(0);
+        tagsDisplay.setVisible(false);
+        tagsDisplay.setMaxWidth(0);
+        editGameButton.setVisible(false);
+        editGameButton.setMaxWidth(0);
+        //TODO populate
+        rjCodeField.setVisible(true);
+        titleField.setVisible(true);
+        circleSelector.setVisible(true);
+        addCircleButton.setVisible(true);
+        pathField.setVisible(true);
+        pathBrowseButton.setVisible(true);
+        sizeField.setVisible(true);
+        sizeCalculateButton.setVisible(true);
+        ratingSelector.setVisible(true);
+        releaseDateSelector.setVisible(true);
+        tagField.setVisible(true);
+        saveButton.setVisible(true);
+    }
+    protected void saveEdit(){
+        //TODO send to DB
+        checkAndChangeDetails();
+        viewMode();
+    }
+    protected void viewMode(){
+        rjCodeField.setVisible(false);
+        titleField.setVisible(false);
+        circleSelector.setVisible(false);
+        addCircleButton.setVisible(false);
+        pathField.setVisible(false);
+        pathBrowseButton.setVisible(false);
+        sizeField.setVisible(false);
+        sizeCalculateButton.setVisible(false);
+        ratingSelector.setVisible(false);
+        releaseDateSelector.setVisible(false);
+        tagField.setVisible(false);
+        saveButton.setVisible(false);
+        rjCodeDisplay.setVisible(true);
+        rjCodeDisplay.setMaxWidth(250);
+        rjCodeDisplay.setPrefWidth(250);
+        titleDisplay.setVisible(true);
+        titleDisplay.setMaxWidth(250);
+        titleDisplay.setPrefWidth(250);
+        circleDisplay.setVisible(true);
+        circleDisplay.setMaxWidth(250);
+        circleDisplay.setPrefWidth(250);
+        pathDisplay.setVisible(true);
+        pathDisplay.setMaxWidth(250);
+        pathDisplay.setPrefWidth(250);
+        sizeDisplay.setVisible(true);
+        sizeDisplay.setMaxWidth(250);
+        sizeDisplay.setPrefWidth(250);
+        ratingDisplay.setVisible(true);
+        releaseDateDisplay.setVisible(true);
+        releaseDateDisplay.setMaxWidth(250);
+        releaseDateDisplay.setPrefWidth(250);
+        tagsDisplay.setVisible(true);
+        tagsDisplay.setMaxWidth(250);
+        tagsDisplay.setPrefWidth(250);
+        editGameButton.setVisible(true);
     }
 }

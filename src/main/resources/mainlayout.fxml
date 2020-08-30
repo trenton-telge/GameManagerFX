@@ -5,7 +5,7 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.trentontelge.gamemanagerfx.ui.MainController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.trentontelge.gamemanagerfx.ui.MainController">
    <top>
        <MenuBar BorderPane.alignment="CENTER">
            <Menu mnemonicParsing="false" text="File">
@@ -69,6 +69,10 @@
                        </padding>
                    </Label>
                    <Label fx:id="rjCodeDisplay" text="     " wrapText="true" />
+               <TextField fx:id="rjCodeField">
+                  <HBox.margin>
+                     <Insets right="10.0" />
+                  </HBox.margin></TextField>
                </HBox>
                <HBox prefWidth="200.0">
                    <padding>
@@ -80,6 +84,10 @@
                        </padding>
                    </Label>
                    <Label fx:id="titleDisplay" text="     " wrapText="true" />
+               <TextField fx:id="titleField">
+                  <HBox.margin>
+                     <Insets right="10.0" />
+                  </HBox.margin></TextField>
                </HBox>
                <HBox prefWidth="200.0">
                    <VBox.margin>
@@ -90,7 +98,12 @@
                            <Insets left="10.0" />
                        </padding>
                    </Label>
-                   <Label fx:id="circleDisplay" text="     " wrapText="true" />
+                   <Label fx:id="circleDisplay" maxHeight="40.0" text="     " wrapText="true" />
+               <ComboBox fx:id="circleSelector" prefWidth="150.0" />
+               <Button fx:id="addCircleButton" minWidth="40.0" mnemonicParsing="false" text="New">
+                  <HBox.margin>
+                     <Insets left="10.0" right="10.0" />
+                  </HBox.margin></Button>
                </HBox>
                <HBox prefWidth="200.0">
                    <VBox.margin>
@@ -101,7 +114,12 @@
                            <Insets left="10.0" />
                        </padding>
                    </Label>
-                   <Label fx:id="pathDisplay" text="     " wrapText="true" />
+                   <Label fx:id="pathDisplay" maxHeight="40.0" text="     " wrapText="true" />
+               <TextField fx:id="pathField" />
+               <Button fx:id="pathBrowseButton" minWidth="60.0" mnemonicParsing="false" text="Browse">
+                  <HBox.margin>
+                     <Insets left="10.0" right="10.0" />
+                  </HBox.margin></Button>
                </HBox>
                <HBox prefWidth="200.0">
                    <VBox.margin>
@@ -112,7 +130,12 @@
                            <Insets left="10.0" />
                        </padding>
                    </Label>
-                   <Label fx:id="sizeDisplay" text="     " wrapText="true" />
+                   <Label fx:id="sizeDisplay" maxHeight="40.0" text="     " wrapText="true" />
+               <TextField fx:id="sizeField" />
+               <Button fx:id="sizeCalculateButton" minWidth="70.0" mnemonicParsing="false" text="Calculate">
+                  <HBox.margin>
+                     <Insets left="10.0" right="10.0" />
+                  </HBox.margin></Button>
                </HBox>
                <HBox prefWidth="200.0">
                    <VBox.margin>
@@ -124,6 +147,10 @@
                        </padding>
                    </Label>
                    <ImageView fx:id="ratingDisplay" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" />
+               <ChoiceBox fx:id="ratingSelector" prefWidth="150.0">
+                  <HBox.margin>
+                     <Insets right="10.0" />
+                  </HBox.margin></ChoiceBox>
                </HBox>
                <HBox prefWidth="200.0">
                    <VBox.margin>
@@ -135,6 +162,10 @@
                        </padding>
                    </Label>
                    <Label fx:id="releaseDateDisplay" text="     " wrapText="true" />
+               <DatePicker fx:id="releaseDateSelector">
+                  <HBox.margin>
+                     <Insets right="10.0" />
+                  </HBox.margin></DatePicker>
                </HBox>
                <HBox prefWidth="200.0">
                    <VBox.margin>
@@ -145,9 +176,18 @@
                            <Insets left="10.0" />
                        </padding>
                    </Label>
-                   <Label fx:id="tagsDisplay" text="     " wrapText="true" />
+                   <Label fx:id="tagsDisplay" maxHeight="200.0" text="     " wrapText="true" />
+               <TextArea fx:id="tagField" maxHeight="100.0" prefHeight="200.0" prefWidth="200.0">
+                  <HBox.margin>
+                     <Insets right="10.0" />
+                  </HBox.margin></TextArea>
                </HBox>
                <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0">
+               <Button fx:id="saveButton" mnemonicParsing="false" text="Save">
+                  <HBox.margin>
+                     <Insets right="10.0" top="10.0" />
+                  </HBox.margin>
+               </Button>
                    <Button fx:id="editGameButton" alignment="CENTER_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false" text="Edit">
                        <HBox.margin>
                            <Insets right="10.0" top="10.0" />
