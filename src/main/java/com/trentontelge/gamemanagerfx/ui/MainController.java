@@ -9,6 +9,7 @@ import com.trentontelge.gamemanagerfx.util.GameFileFilter;
 import com.trentontelge.gamemanagerfx.util.OSChecker;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
@@ -20,6 +21,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 
 import javax.swing.*;
 import java.awt.*;
@@ -42,13 +45,21 @@ public class MainController implements Initializable {
     public TableColumn<Game, Image> ratingCol;
     public TableColumn<Game, String> sizeCol;
     public TableColumn<Game, String> tagsCol;
+    @FXML
     public Label rjCodeDisplay;
+    @FXML
     public Label titleDisplay;
+    @FXML
     public Label circleDisplay;
+    @FXML
     public Label pathDisplay;
+    @FXML
     public Label sizeDisplay;
+    @FXML
     public ImageView ratingDisplay;
+    @FXML
     public Label releaseDateDisplay;
+    @FXML
     public Label tagsDisplay;
     public Button editGameButton;
     public AnchorPane imageScrollpane;
@@ -64,10 +75,14 @@ public class MainController implements Initializable {
     public DatePicker releaseDateSelector;
     public TextArea tagField;
     public Button saveButton;
+    public VBox dataPane;
+    public VBox editPane;
     private Game previousSelection;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        dataPane.managedProperty().bind(dataPane.visibleProperty());
+        editPane.managedProperty().bind(editPane.visibleProperty());
         viewMode();
         gameTable.setRowFactory( tv -> {
             TableRow<Game> row = new TableRow<>();
@@ -112,7 +127,7 @@ public class MainController implements Initializable {
             row.setContextMenu(rowMenu);
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 1 && (!row.isEmpty())) {
-                    checkAndChangeDetails();
+                    checkAndChangeDetails(row.getItem());
                 }
                 if (event.getClickCount() == 2 && (!row.isEmpty())) {
                     runGame(gameTable.getSelectionModel().getSelectedItem());
@@ -177,9 +192,9 @@ public class MainController implements Initializable {
                 for (Game g : gameTable.getItems()){
                     if (g.getId() == id){
                         gameTable.getSelectionModel().select(gameTable.getItems().indexOf(g));
+                        checkAndChangeDetails(gameTable.getSelectionModel().getSelectedItem());
                     }
                 }
-                checkAndChangeDetails();
                 editGame();
             }
         });
@@ -209,10 +224,10 @@ public class MainController implements Initializable {
         releaseDateDisplay.setText("     ");
         tagsDisplay.setText("     ");
     }
-    protected void checkAndChangeDetails(){
-        if (!gameTable.getSelectionModel().getSelectedItem().equals(previousSelection)){
+    protected void checkAndChangeDetails(Game g){
+        if (!g.equals(previousSelection)){
             viewMode();
-            previousSelection = gameTable.getSelectionModel().getSelectedItem();
+            previousSelection = g;
             resetLabels();
             rjCodeDisplay.setText(previousSelection.getRJCode());
             titleDisplay.setText(previousSelection.getTitle());
@@ -311,77 +326,26 @@ public class MainController implements Initializable {
         }
     }
     protected void editGame(){
-        rjCodeDisplay.setVisible(false);
-        rjCodeDisplay.setMaxWidth(0);
-        titleDisplay.setVisible(false);
-        titleDisplay.setMaxWidth(0);
-        circleDisplay.setVisible(false);
-        circleDisplay.setMaxWidth(0);
-        pathDisplay.setVisible(false);
-        pathDisplay.setMaxWidth(0);
-        sizeDisplay.setVisible(false);
-        sizeDisplay.setMaxWidth(0);
-        ratingDisplay.setVisible(false);
-        releaseDateDisplay.setVisible(false);
-        releaseDateDisplay.setMaxWidth(0);
-        tagsDisplay.setVisible(false);
-        tagsDisplay.setMaxWidth(0);
-        editGameButton.setVisible(false);
-        editGameButton.setMaxWidth(0);
+        dataPane.setMaxHeight(0);
+        dataPane.setPrefHeight(0);
+        dataPane.setVisible(false);
+        editPane.setVisible(true);
+        editPane.setPrefHeight(200);
+        editPane.setMaxHeight(Region.USE_COMPUTED_SIZE);
         //TODO populate
-        rjCodeField.setVisible(true);
-        titleField.setVisible(true);
-        circleSelector.setVisible(true);
-        addCircleButton.setVisible(true);
-        pathField.setVisible(true);
-        pathBrowseButton.setVisible(true);
-        sizeField.setVisible(true);
-        sizeCalculateButton.setVisible(true);
-        ratingSelector.setVisible(true);
-        releaseDateSelector.setVisible(true);
-        tagField.setVisible(true);
-        saveButton.setVisible(true);
     }
     protected void saveEdit(){
         //TODO send to DB
-        checkAndChangeDetails();
+        checkAndChangeDetails(previousSelection);
         viewMode();
     }
     protected void viewMode(){
-        rjCodeField.setVisible(false);
-        titleField.setVisible(false);
-        circleSelector.setVisible(false);
-        addCircleButton.setVisible(false);
-        pathField.setVisible(false);
-        pathBrowseButton.setVisible(false);
-        sizeField.setVisible(false);
-        sizeCalculateButton.setVisible(false);
-        ratingSelector.setVisible(false);
-        releaseDateSelector.setVisible(false);
-        tagField.setVisible(false);
-        saveButton.setVisible(false);
-        rjCodeDisplay.setVisible(true);
-        rjCodeDisplay.setMaxWidth(250);
-        rjCodeDisplay.setPrefWidth(250);
-        titleDisplay.setVisible(true);
-        titleDisplay.setMaxWidth(250);
-        titleDisplay.setPrefWidth(250);
-        circleDisplay.setVisible(true);
-        circleDisplay.setMaxWidth(250);
-        circleDisplay.setPrefWidth(250);
-        pathDisplay.setVisible(true);
-        pathDisplay.setMaxWidth(250);
-        pathDisplay.setPrefWidth(250);
-        sizeDisplay.setVisible(true);
-        sizeDisplay.setMaxWidth(250);
-        sizeDisplay.setPrefWidth(250);
-        ratingDisplay.setVisible(true);
-        releaseDateDisplay.setVisible(true);
-        releaseDateDisplay.setMaxWidth(250);
-        releaseDateDisplay.setPrefWidth(250);
-        tagsDisplay.setVisible(true);
-        tagsDisplay.setMaxWidth(250);
-        tagsDisplay.setPrefWidth(250);
-        editGameButton.setVisible(true);
+        editPane.setPrefHeight(0);
+        editPane.setMaxHeight(0);
+        editPane.setVisible(false);
+        refreshData();
+        dataPane.setVisible(true);
+        dataPane.setPrefHeight(200);
+        dataPane.setMaxHeight(Region.USE_COMPUTED_SIZE);
     }
 }
