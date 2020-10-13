@@ -237,11 +237,11 @@
                                <Insets left="10.0" />
                            </padding>
                        </Label>
-                       <ChoiceBox fx:id="ratingSelector" prefWidth="50.0">
+                       <ComboBox fx:id="ratingSelector" prefWidth="250.0">
                            <HBox.margin>
                                <Insets right="10.0" />
                            </HBox.margin>
-                       </ChoiceBox>
+                       </ComboBox>
                    </HBox>
                    <HBox prefWidth="200.0">
                        <VBox.margin>

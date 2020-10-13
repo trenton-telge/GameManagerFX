@@ -3,6 +3,7 @@ package com.trentontelge.gamemanagerfx.ui;
 import com.trentontelge.gamemanagerfx.Main;
 import com.trentontelge.gamemanagerfx.database.DatabaseHelper;
 import com.trentontelge.gamemanagerfx.database.DatafileHelper;
+import com.trentontelge.gamemanagerfx.prototypes.Circle;
 import com.trentontelge.gamemanagerfx.prototypes.Game;
 import com.trentontelge.gamemanagerfx.util.DBFileFilter;
 import com.trentontelge.gamemanagerfx.util.GameFileFilter;
@@ -11,18 +12,19 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.util.Callback;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,6 +32,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
@@ -45,33 +49,25 @@ public class MainController implements Initializable {
     public TableColumn<Game, Image> ratingCol;
     public TableColumn<Game, String> sizeCol;
     public TableColumn<Game, String> tagsCol;
-    @FXML
     public Label rjCodeDisplay;
-    @FXML
     public Label titleDisplay;
-    @FXML
     public Label circleDisplay;
-    @FXML
     public Label pathDisplay;
-    @FXML
     public Label sizeDisplay;
-    @FXML
     public ImageView ratingDisplay;
-    @FXML
     public Label releaseDateDisplay;
-    @FXML
     public Label tagsDisplay;
     public Button editGameButton;
     public AnchorPane imageScrollpane;
     public TextField rjCodeField;
     public TextField titleField;
-    public ComboBox circleSelector;
+    public ComboBox<Circle> circleSelector;
     public Button addCircleButton;
     public TextField pathField;
     public Button pathBrowseButton;
     public TextField sizeField;
     public Button sizeCalculateButton;
-    public ChoiceBox ratingSelector;
+    public ComboBox<String> ratingSelector;
     public DatePicker releaseDateSelector;
     public TextArea tagField;
     public Button saveButton;
@@ -83,6 +79,55 @@ public class MainController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         dataPane.managedProperty().bind(dataPane.visibleProperty());
         editPane.managedProperty().bind(editPane.visibleProperty());
+        ObservableList<Circle> circleList = FXCollections.observableList(DatabaseHelper.getAllCircles());
+        circleSelector.setItems(circleList);
+        circleSelector.setCellFactory(new Callback<>() {
+            @Override
+            public ListCell<Circle> call(ListView<Circle> p) {
+                return new ListCell<>() {
+                    @Override
+                    protected void updateItem(Circle t, boolean bln) {
+                        super.updateItem(t, bln);
+                        if (t != null) {
+                            setText(t.getName());
+                        } else {
+                            setText(null);
+                        }
+                    }
+                };
+            }
+        });
+        ratingSelector.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
+            @Override
+            public ListCell<String> call(ListView<String> p) {
+                return new ListCell<String>() {
+                    @Override
+                    protected void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        setText(item);
+                        if (item == null || empty) {
+                            setGraphic(null);
+                        } else {
+                            Image icon;
+                            try {
+                                int iconNumber = this.getIndex();
+                                String iconPath = "img\\" + iconNumber + ".png";
+                                icon = new Image(iconPath);
+                            } catch(NullPointerException ex) {
+                                String iconPath = "img\\0.png";
+                                icon = new Image(iconPath);
+                            }
+                            ImageView iconImageView = new ImageView(icon);
+                            iconImageView.setFitHeight(30);
+                            iconImageView.setPreserveRatio(true);
+                            setGraphic(iconImageView);
+                        }
+                    }
+                };
+            }
+        });
+        final String[] ratings = {"X", "Unplayable", "Bad", "Decent", "Good", "Great"};
+        ratingSelector.setItems(FXCollections.observableList(Arrays.asList(ratings)));
         viewMode();
         gameTable.setRowFactory( tv -> {
             TableRow<Game> row = new TableRow<>();
@@ -198,20 +243,19 @@ public class MainController implements Initializable {
                 editGame();
             }
         });
-        saveButton.setOnAction(e -> {
-            saveEdit();
-        });
-        editGameButton.setOnAction(e -> {
-            editGame();
-        });
+        saveButton.setOnAction(e -> saveEdit());
+        editGameButton.setOnAction(e -> editGame());
         exportJSONMenu.setOnAction( e -> DatafileHelper.saveDBAsJSON());
         preferencesMenu.setOnAction( e-> Main.showPrefs());
         refreshData();
+        gameTable.getSelectionModel().select(0);
+        checkAndChangeDetails(gameTable.getSelectionModel().getSelectedItem());
     }
     protected void refreshData(){
         System.out.println("Refreshing data...");
         ObservableList<Game> data = FXCollections.observableList(DatabaseHelper.getAllGames());
         gameTable.setItems(data);
+        gameTable.getSortOrder().add(titleCol);
         System.out.println("Data refreshed.");
     }
     protected void resetLabels(){
@@ -332,6 +376,16 @@ public class MainController implements Initializable {
         editPane.setVisible(true);
         editPane.setPrefHeight(200);
         editPane.setMaxHeight(Region.USE_COMPUTED_SIZE);
+        saveButton.setVisible(true);
+        editGameButton.setVisible(false);
+        rjCodeField.setText(previousSelection.getRJCode());
+        titleField.setText(previousSelection.getTags());
+        circleSelector.getSelectionModel().select(circleSelector.getItems().indexOf(DatabaseHelper.getCircle(previousSelection.getCircleid())));
+        pathField.setText(previousSelection.getPath());
+        sizeField.setText(String.valueOf(previousSelection.getSize()));
+        releaseDateSelector.setValue(previousSelection.getReleaseDate().toLocalDate());
+        tagField.setText(previousSelection.getTags());
+        ratingSelector.getSelectionModel().select(previousSelection.getRating());
         //TODO populate
     }
     protected void saveEdit(){
@@ -347,5 +401,7 @@ public class MainController implements Initializable {
         dataPane.setVisible(true);
         dataPane.setPrefHeight(200);
         dataPane.setMaxHeight(Region.USE_COMPUTED_SIZE);
+        saveButton.setVisible(false);
+        editGameButton.setVisible(true);
     }
 }
