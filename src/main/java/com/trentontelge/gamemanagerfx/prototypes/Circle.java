@@ -20,6 +20,11 @@ public class Circle {
         this.name = name;
     }
 
+    @Override
+    public String toString() {
+        return name;
+    }
+
     public int getCircleID() {
         return circleID;
     }

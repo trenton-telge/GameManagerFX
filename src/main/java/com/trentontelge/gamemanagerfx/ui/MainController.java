@@ -35,6 +35,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.ResourceBundle;
+import java.util.Vector;
+import java.util.stream.StreamSupport;
 
 public class MainController implements Initializable {
     public MenuItem closeMenu;
@@ -386,7 +388,17 @@ public class MainController implements Initializable {
         releaseDateSelector.setValue(previousSelection.getReleaseDate().toLocalDate());
         tagField.setText(previousSelection.getTags());
         ratingSelector.getSelectionModel().select(previousSelection.getRating());
-        //TODO populate
+        int circleIndex = -1;
+        System.out.println(previousSelection.getCircleName());
+        for (Circle c : circleSelector.getItems()) {
+            if (c.getName().equals(previousSelection.getCircleName())) {
+                circleIndex = circleSelector.getItems().indexOf(c);
+                System.out.println(circleIndex);
+            }
+        }
+        if (circleIndex >= 0) {
+            circleSelector.getSelectionModel().select(circleIndex);
+        }
     }
     protected void saveEdit(){
         //TODO send to DB
