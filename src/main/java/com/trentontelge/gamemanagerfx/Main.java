@@ -42,6 +42,11 @@ public class Main extends Application {
         DatabaseHelper.writeDBToFile();
     }
 
+    @Override
+    public void stop(){
+
+    }
+
     public static void showImportBar(Runnable updater){
         try {
             callback = updater;

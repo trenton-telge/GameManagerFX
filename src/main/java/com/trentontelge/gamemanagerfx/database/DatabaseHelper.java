@@ -16,6 +16,62 @@ import static com.trentontelge.gamemanagerfx.database.DatafileHelper.getFile;
 
 public class DatabaseHelper {
 
+    public static void setTitle(int id, String title) {
+        try {
+            Connection conn = createNewConnection();
+            PreparedStatement ps = conn.prepareStatement("UPDATE GAMES SET TITLE=? WHERE GAMEID=?");
+            ps.setString(1, title);
+            ps.setInt(2, id);
+            ps.executeUpdate();
+            ps.close();
+            conn.close();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public static void setPath(int id, String path) {
+        try {
+            Connection conn = createNewConnection();
+            PreparedStatement ps = conn.prepareStatement("UPDATE GAMES SET FOLDERPATH=? WHERE GAMEID=?");
+            ps.setString(1, path);
+            ps.setInt(2, id);
+            ps.executeUpdate();
+            ps.close();
+            conn.close();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public static void setCircle(int id, String name) {
+        try {
+            Connection conn = createNewConnection();
+            PreparedStatement ps = conn.prepareStatement("UPDATE GAMES SET CIRCLEID=(SELECT CIRCLEID FROM CIRCLES WHERE TITLE=?) WHERE GAMEID=?");
+            ps.setString(1, name);
+            ps.setInt(2, id);
+            ps.executeUpdate();
+            ps.close();
+            conn.close();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public static void setRating(int id, int rating) {
+        try {
+            Connection conn = createNewConnection();
+            PreparedStatement ps = conn.prepareStatement("UPDATE GAMES SET RATING=? WHERE GAMEID=?");
+            ps.setInt(1, rating);
+            ps.setInt(2, id);
+            ps.executeUpdate();
+            ps.close();
+            conn.close();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
     public enum KnownTable{
         GAMES("GAMES"),
         CIRCLES("CIRCLES"),
@@ -181,7 +237,7 @@ public class DatabaseHelper {
                 ps.execute();
                 ps.close();
                 conn.close();
-                System.out.println("Read backed up copy of GAMES from " + getFile(KnownTable.GAMES).toString());
+                System.out.println("Read backed up copy of GAMES from " + getFile(KnownTable.GAMES));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -203,7 +259,7 @@ public class DatabaseHelper {
                 ps.execute();
                 ps.close();
                 conn.close();
-                System.out.println("Read backed up copy of CIRCLES from " + getFile(KnownTable.CIRCLES).toString());
+                System.out.println("Read backed up copy of CIRCLES from " + getFile(KnownTable.CIRCLES));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -225,7 +281,7 @@ public class DatabaseHelper {
                 ps.execute();
                 ps.close();
                 conn.close();
-                System.out.println("Read backed up copy of IMAGES from " + getFile(KnownTable.IMAGES).toString());
+                System.out.println("Read backed up copy of IMAGES from " + getFile(KnownTable.IMAGES));
             } catch (Exception e) {
                 e.printStackTrace();
             }

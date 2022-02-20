@@ -20,7 +20,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="15">
-      <module name="GameManagerFX" target="15" />
+      <module name="GameManagerFX" target="17" />
     </bytecodeTargetLevel>
   </component>
 </project>

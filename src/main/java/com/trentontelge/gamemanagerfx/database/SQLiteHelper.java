@@ -3,6 +3,7 @@ package com.trentontelge.gamemanagerfx.database;
 import com.trentontelge.gamemanagerfx.prototypes.Circle;
 import com.trentontelge.gamemanagerfx.prototypes.Game;
 import com.trentontelge.gamemanagerfx.prototypes.Image;
+import com.trentontelge.gamemanagerfx.util.exceptions.ErrorHandler;
 
 import java.sql.*;
 import java.util.Vector;
@@ -21,7 +22,7 @@ public class SQLiteHelper {
             ResultSet rs = ps.executeQuery();
             return rs.getInt(1);
         } catch (Exception e) {
-            e.printStackTrace();
+            ErrorHandler.handleException(e, false);
         }
         return 0;
     }

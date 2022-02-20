@@ -10,7 +10,6 @@ import com.trentontelge.gamemanagerfx.util.GameFileFilter;
 import com.trentontelge.gamemanagerfx.util.OSChecker;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -32,11 +31,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.ResourceBundle;
-import java.util.Vector;
-import java.util.stream.StreamSupport;
 
 public class MainController implements Initializable {
     public MenuItem closeMenu;
@@ -75,6 +71,7 @@ public class MainController implements Initializable {
     public Button saveButton;
     public VBox dataPane;
     public VBox editPane;
+    public Label statusText;
     private Game previousSelection;
 
     @Override
@@ -99,10 +96,10 @@ public class MainController implements Initializable {
                 };
             }
         });
-        ratingSelector.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
+        ratingSelector.setCellFactory(new Callback<>() {
             @Override
             public ListCell<String> call(ListView<String> p) {
-                return new ListCell<String>() {
+                return new ListCell<>() {
                     @Override
                     protected void updateItem(String item, boolean empty) {
                         super.updateItem(item, empty);
@@ -115,7 +112,7 @@ public class MainController implements Initializable {
                                 int iconNumber = this.getIndex();
                                 String iconPath = "img\\" + iconNumber + ".png";
                                 icon = new Image(iconPath);
-                            } catch(NullPointerException ex) {
+                            } catch (NullPointerException ex) {
                                 String iconPath = "img\\0.png";
                                 icon = new Image(iconPath);
                             }
@@ -247,11 +244,19 @@ public class MainController implements Initializable {
         });
         saveButton.setOnAction(e -> saveEdit());
         editGameButton.setOnAction(e -> editGame());
+        addCircleButton.setOnAction(e -> {
+            //TODO add circle interface
+        });
+        sizeCalculateButton.setOnAction(e -> {
+            //TODO calculate size of containing folder
+        });
         exportJSONMenu.setOnAction( e -> DatafileHelper.saveDBAsJSON());
         preferencesMenu.setOnAction( e-> Main.showPrefs());
         refreshData();
         gameTable.getSelectionModel().select(0);
-        checkAndChangeDetails(gameTable.getSelectionModel().getSelectedItem());
+        if (gameTable.getSelectionModel().getSelectedItem() != null) {
+            checkAndChangeDetails(gameTable.getSelectionModel().getSelectedItem());
+        }
     }
     protected void refreshData(){
         System.out.println("Refreshing data...");
@@ -272,7 +277,7 @@ public class MainController implements Initializable {
     }
     protected void checkAndChangeDetails(Game g){
         if (!g.equals(previousSelection)){
-            viewMode();
+            //viewMode();
             previousSelection = g;
             resetLabels();
             rjCodeDisplay.setText(previousSelection.getRJCode());
@@ -325,6 +330,7 @@ public class MainController implements Initializable {
     protected void runGame(Game g){
         //TODO add run support for non-Windows and HTML games, and add dynamic pathing
         if (new File(g.getPath()).exists()) {
+            setStatusText("Attempt to run " + g.getPath());
             System.out.println("Attempt to run " + g.getPath());
             if (g.getPath().toLowerCase().endsWith(".exe")) {
                 try {
@@ -346,6 +352,7 @@ public class MainController implements Initializable {
                 }
             }
         } else if (new File(Main.prefs.getLibraryHome() + System.getProperty("file.separator") + g.getPath()).exists()) {
+            setStatusText("Attempt to run " + g.getPath());
             System.out.println("Attempt to run " + g.getPath());
             if (g.getPath().toLowerCase().endsWith(".exe")) {
                 try {
@@ -367,7 +374,7 @@ public class MainController implements Initializable {
                 }
             }
         } else {
-            //TODO show error dialog
+            setStatusText("Game executable not found.");
             System.out.println("Game executable not found");
         }
     }
@@ -381,7 +388,7 @@ public class MainController implements Initializable {
         saveButton.setVisible(true);
         editGameButton.setVisible(false);
         rjCodeField.setText(previousSelection.getRJCode());
-        titleField.setText(previousSelection.getTags());
+        titleField.setText(previousSelection.getTitle());
         circleSelector.getSelectionModel().select(circleSelector.getItems().indexOf(DatabaseHelper.getCircle(previousSelection.getCircleid())));
         pathField.setText(previousSelection.getPath());
         sizeField.setText(String.valueOf(previousSelection.getSize()));
@@ -401,7 +408,20 @@ public class MainController implements Initializable {
         }
     }
     protected void saveEdit(){
-        //TODO send to DB
+        if (!previousSelection.getTitle().equals(titleField.getText())) {
+            DatabaseHelper.setTitle(previousSelection.getId(), titleField.getText());
+        }
+        if (!previousSelection.getPath().equals(pathField.getText())) {
+            DatabaseHelper.setPath(previousSelection.getId(), pathField.getText());
+        }
+        if (!previousSelection.getCircleName().equals(circleSelector.getSelectionModel().getSelectedItem().getName())) {
+            DatabaseHelper.setCircle(previousSelection.getId(), circleSelector.getSelectionModel().getSelectedItem().getName());
+        }
+        if (previousSelection.getRating() != ratingSelector.getSelectionModel().getSelectedIndex()) {
+            DatabaseHelper.setRating(previousSelection.getId(), ratingSelector.getSelectionModel().getSelectedIndex());
+        }
+        //TODO size, rjcode, releasedate, tags
+        DatabaseHelper.writeDBToFile();
         checkAndChangeDetails(previousSelection);
         viewMode();
     }
@@ -415,5 +435,8 @@ public class MainController implements Initializable {
         dataPane.setMaxHeight(Region.USE_COMPUTED_SIZE);
         saveButton.setVisible(false);
         editGameButton.setVisible(true);
+    }
+    protected void setStatusText(String text) {
+        this.statusText.setText(text);
     }
 }

@@ -5,7 +5,7 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.trentontelge.gamemanagerfx.ui.MainController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.trentontelge.gamemanagerfx.ui.MainController">
    <top>
        <MenuBar BorderPane.alignment="CENTER">
            <Menu mnemonicParsing="false" text="File">
@@ -45,7 +45,13 @@
        </GridPane>
    </center>
    <bottom>
-      <HBox prefHeight="20.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+       <HBox prefHeight="20.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+           <Label fx:id="statusText" prefHeight="20.0" prefWidth="500.0" text="All good!">
+              <padding>
+                  <Insets left="5.0"/>
+              </padding>
+           </Label>
+       </HBox>
    </bottom>
    <right>
        <GridPane minWidth="300.0" BorderPane.alignment="CENTER">
